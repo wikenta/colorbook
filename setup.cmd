@@ -25,7 +25,7 @@ if exist requirements.txt (
 
 :: 3. Подсказка по активации
 echo.
-echo 🎉 Всё готово
+echo 🎉 Всё готово!
 echo Чтобы активировать venv, выполни:
 echo.
 echo     venv\Scripts\activate.bat
