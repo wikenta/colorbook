@@ -1,0 +1,14 @@
+# Исключить виртуальное окружение
+venv/
+
+# Исключить каталог с PDF-файлами
+pdf/
+
+# Исключить кэш python
+**/__pycache__/
+
+# Исключить пароли
+passwords.txt
+secret.py
+
+backup_data.bat
