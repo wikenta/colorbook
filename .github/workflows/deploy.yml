@@ -1,0 +1,22 @@
+name: Deploy Bot
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /colorbook/test
+            git fetch origin main
+            git checkout origin/main  -- code/server/
+            sudo systemctl restart colorbook.service
+            echo "Бот успешно обновлен!"
