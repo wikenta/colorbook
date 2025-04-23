@@ -13,17 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4  # Клонируем весь репозиторий в runner
 
-      - name: List files in repository for debugging
-        run: |
-          ls -R /github/workspace
-
       - name: Copy files to the server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./code/server/*"  # from
+          source: "code/server/*"  # from
           target: "/colorbook/test/"  # to
 
       - name: Restart service
