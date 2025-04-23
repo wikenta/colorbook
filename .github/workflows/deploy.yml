@@ -19,20 +19,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "code/server"  # from
-          target: "/colorbook/test/"  # to
-
-      - name: Move files to the correct directory on server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            mv /colorbook/test/code/server/* /colorbook/test/
-            sudo chmod g+s /colorbook/test
-            sudo chmod -R g+rwX /colorbook/test
-            sudo chown -R :app-deployers /colorbook/test
+          source: "src"  # from
+          target: "/colorbook/"  # to
 
       - name: Restart service
         uses: appleboy/ssh-action@v1
