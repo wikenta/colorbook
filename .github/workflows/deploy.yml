@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "code/server/*"  # from
+          source: "code/server"  # from
           target: "/colorbook/test/"  # to
 
       - name: Restart service
@@ -29,4 +29,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            systemctl restart colorbook.service
+            sudo systemctl restart colorbook.service
