@@ -19,8 +19,9 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "src"  # from
+          source: "src/*"  # from
           target: "/colorbook/"  # to
+          strip_components: 1
 
       - name: Restart service
         uses: appleboy/ssh-action@v1
