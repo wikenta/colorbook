@@ -22,6 +22,10 @@ jobs:
           source: "code/server"  # from
           target: "/colorbook/test/"  # to
 
+      - name: Move files to the correct directory on server
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@$${{ secrets.SERVER_IP }} "mv /colorbook/test/code/server/* /colorbook/test/"
+
       - name: Restart service
         uses: appleboy/ssh-action@v1
         with:
@@ -29,4 +33,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo systemctl restart colorbook.service
+            sudo systemctl restart coloring-bot.service
