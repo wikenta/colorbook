@@ -30,7 +30,7 @@ async def send_books(message: Message):
 # Хендлер на стартовую команду
 @router.message(F.text == "/start")
 async def cmd_start(message: Message):
-    await message.reply("Привет! Бот еще разрабатывается. Загляни позже, скоро появятся новые функции!")
+    await message.reply("Привет! Бот еще разрабатывается. Загляни позже, скоро появятся новые функции")
 
 buttons = [
     [InlineKeyboardButton(text="Кнопка 1", callback_data="button1")],
