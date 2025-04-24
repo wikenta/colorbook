@@ -30,4 +30,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            /colorbook/restart.sh
+            sudo /usr/bin/systemctl restart coloring-bot.service
