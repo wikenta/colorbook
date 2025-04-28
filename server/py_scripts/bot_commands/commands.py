@@ -30,11 +30,11 @@ async def send_books(message: Message):
 
             response += f"\n{s['full_name_ru']}\n"
             for book in books:
-                response += f"  \- {book['name_ru']}"
+                response += f"  - {book['name_ru']}"
                 if book['release_year']:
-                    response += f" \({book['release_year']}\)"
+                    response += f" ({book['release_year']})"
                 response += "\n"
-        await message.reply(response, parse_mode="MarkdownV2")
+        await message.reply(response, parse_mode="Markdown")
 
 # Хендлер для команды /books_test
 @router.message(F.text == "/books_test")
