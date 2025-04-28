@@ -10,6 +10,7 @@ async def get_series() -> List[Dict[str, str]]:
     SELECT s.id, s.name_en. s.name_ru, sn.full_name_en, sn.full_name_ru
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
+    ORDER BY s.full_name_ru
     """
     series = await conn.fetch(query)
     await conn.close()
@@ -26,6 +27,7 @@ async def get_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     JOIN coloring.series_full_name sn ON s.id = sn.id
     JOIN coloring.volume v ON v.series_id = s.id
     WHERE v.publisher_id = $1
+    ORDER BY s.full_name_ru
     """
     series = await conn.fetch(query, publisher_id)
     await conn.close()
@@ -56,6 +58,7 @@ async def get_child_series(parent_id: str) -> List[Dict[str, str]]:
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
     WHERE s.parent_series_id = $1
+    ORDER BY s.full_name_ru
     """
     series = await conn.fetch(query, parent_id)
     await conn.close()
@@ -80,7 +83,8 @@ async def get_all_child_series(series_id: str) -> List[Dict[str, str]]:
     )
     SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
     FROM series_tree st
-    JOIN coloring.series_full_name sn ON st.id = sn.id;
+    JOIN coloring.series_full_name sn ON st.id = sn.id
+    ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query, series_id)
     await conn.close()
