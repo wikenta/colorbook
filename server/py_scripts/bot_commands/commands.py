@@ -34,7 +34,6 @@ async def send_books(message: Message):
                 if book['release_year']:
                     response += f" ({book['release_year']})"
                 response += "\n"
-            response += "\n"
         await message.reply(response, parse_mode="Markdown")
 
 # Хендлер на стартовую команду
