@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
 from db_request.publisher import get_publishers
-from db_request.series import get_series_by_publisher
+from db_request.series import get_series_by_publisher, get_root_series_by_publisher, get_child_series
 from db_request.volume import get_books_by_series
 
 router = Router()
@@ -45,23 +45,47 @@ async def send_books(message: Message):
         return
     
     for publisher in publishers:
-        series = await get_series_by_publisher(publisher['id'])
+        series = await get_root_series_by_publisher(publisher['id'])
         if not series:
             continue
 
         response = f"Издатель: {publisher['name_ru']}\n"
         for s in series:
-            books = await get_books_by_series(s['id'])
-            if not books:
-                continue
-
             response += f"\n{s['full_name_ru']}\n"
-            for book in books:
-                response += f"  - {book['name_ru']}"
-                if book['release_year']:
-                    response += f" ({book['release_year']})"
-                response += "\n"
+            response += await get_message_child_series_recursive(s['id'])
         await message.reply(response, parse_mode="Markdown")
+
+async def get_message_child_series_recursive (series_id: str, depth: int = 1) -> str:
+    """
+    Рекурсивно получает дочерние серии и формирует сообщение
+    """
+    books = await get_books_by_series(series_id)
+    series = await get_child_series(series_id)
+    if not series and not books:
+        return "Не заполнено"
+    
+    response = ""
+    # рекурсивный вызов
+    #  - книга
+    #  - серия
+    # рекурсивный вызов
+    #    - книга
+    #    - серия
+    # рекурсивный вызов
+    #      - книга
+
+    response = ""
+    for book in books:
+        response += f"{'  ' * depth}- {book['name_ru']}"
+        if book['release_year']:
+            response += f" ({book['release_year']})"
+        response += "\n"
+    
+    for child in series:
+        response += f"{'  ' * depth}- {child['full_name_ru']}\n"
+        response += await get_message_child_series_recursive(child['id'], child['full_name_ru'], depth + 1)
+
+    return response
 
 # Хендлер на стартовую команду
 @router.message(F.text == "/start")
