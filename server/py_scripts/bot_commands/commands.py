@@ -12,19 +12,22 @@ router = Router()
 @router.message(F.text == "/books")
 async def send_books(message: Message):
     response = "Список книг:\n\n"
-    
+
     publishers = await get_publishers()
     for publisher in publishers:
         books = await get_books_by_publisher(publisher['id'])
         if books:
             response += f"Издатель: {publisher['name_ru']}\n"
             for book in books:
-                response += f"{book['full_name_ru']} ({book['release_year']})\n"
+                response += f"{book['full_name_ru']}"
+                if book['release_year']:
+                    response += f" ({book['release_year']})"
+                response += "\n"
             response += "\n"
-        
+
     if not response:
         response = "Книги не найдены."
-    
+
     await message.reply(response, parse_mode="Markdown")
 
 # Хендлер на стартовую команду
@@ -155,9 +158,9 @@ async def test_timer_button(message: Message):
     msg = await message.answer("Таймер: 10 сек", reply_markup=InlineKeyboardMarkup(inline_keyboard=
         [InlineKeyboardButton(text="Отмена", callback_data="cancel_timer")]
     ))
-    
+
     for i in range(9, 0, -1):
         await asyncio.sleep(1)
         await msg.edit_text(f"Таймер: {i} сек")
-    
+
     await msg.edit_text("Время вышло!", reply_markup=None)
