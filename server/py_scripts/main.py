@@ -59,7 +59,7 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     for sig in (signal.SIGTERM, signal.SIGINT):
         loop.add_signal_handler(sig, lambda: asyncio.create_task(shutdown(dp, bot)))
-    
+
     try:
         loop.run_until_complete(main())
     finally:
