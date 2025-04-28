@@ -89,7 +89,7 @@ async def get_child_series(parent_id: str) -> List[Dict[str, str]]:
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
     WHERE s.parent_series_id = $1
-    ORDER BY s.full_name_ru
+    ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query, parent_id)
     await conn.close()
