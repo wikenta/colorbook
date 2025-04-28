@@ -10,6 +10,7 @@ async def get_all_books() -> List[Dict[str, str]]:
     SELECT v.id, v.release_year, v.page_count, v.name_en, v.name_ru, vn.full_name_en, vn.full_name_ru
     FROM coloring.volume v
     JOIN coloring.volume_full_name vn ON v.id = vn.id
+    ORDER BY vn.full_name_ru
     """
     books = await conn.fetch(query)
     await conn.close()
@@ -25,6 +26,7 @@ async def get_books_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     FROM coloring.volume v
     JOIN coloring.volume_full_name vn ON v.id = vn.id
     WHERE v.publisher_id = $1
+    ORDER BY vn.full_name_ru
     """
     books = await conn.fetch(query, publisher_id)
     await conn.close()
@@ -40,6 +42,7 @@ async def get_books_by_series(series_id: str) -> List[Dict[str, str]]:
     FROM coloring.volume v
     JOIN coloring.volume_full_name vn ON v.id = vn.id
     WHERE v.series_id = $1
+    ORDER BY vn.full_name_ru
     """
     books = await conn.fetch(query, series_id)
     await conn.close()
@@ -81,6 +84,7 @@ async def get_all_books_in_series(series_id: str) -> List[Dict[str, str]]:
     FROM series_tree st
     JOIN coloring.volume v ON v.series_id = st.id
     JOIN coloring.volume_full_name vn ON v.id = vn.id
+    ORDER BY vn.full_name_ru
     """
     books = await conn.fetch(query, series_id)
     await conn.close()
