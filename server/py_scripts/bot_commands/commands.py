@@ -35,7 +35,8 @@ async def send_books(message: Message):
                     response += f" ({book['release_year']})"
                 response += "\n"
             response += "\n"
-        await message.reply(response, parse_mode="Markdown")
+            await message.reply(response, parse_mode="Markdown")
+            response = ""
 
 # Хендлер на стартовую команду
 @router.message(F.text == "/start")
