@@ -26,6 +26,7 @@ async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Запустить бота"),
         BotCommand(command="books", description="Показать список книг"),
+        BotCommand(command="books_test", description="Показать новый список книг"),
         #BotCommand(command="test_buttons", description="Тест Inline-кнопок"),
         #BotCommand(command="test_reply_buttons", description="Тест Reply-кнопок"),
         #BotCommand(command="remove_buttons", description="Удалить клавиатуру"),

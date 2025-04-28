@@ -36,6 +36,33 @@ async def send_books(message: Message):
                 response += "\n"
         await message.reply(response, parse_mode="Markdown")
 
+# Хендлер для команды /books_test
+@router.message(F.text == "/books_test")
+async def send_books(message: Message):
+    publishers = await get_publishers()
+    if not publishers:
+        await message.reply("Издатели не найдены.")
+        return
+    
+    for publisher in publishers:
+        series = await get_series_by_publisher(publisher['id'])
+        if not series:
+            continue
+
+        response = f"Издатель: {publisher['name_ru']}\n"
+        for s in series:
+            books = await get_books_by_series(s['id'])
+            if not books:
+                continue
+
+            response += f"\n{s['full_name_ru']}\n"
+            for book in books:
+                response += f"  - {book['name_ru']}"
+                if book['release_year']:
+                    response += f" ({book['release_year']})"
+                response += "\n"
+        await message.reply(response, parse_mode="Markdown")
+
 # Хендлер на стартовую команду
 @router.message(F.text == "/start")
 async def cmd_start(message: Message):
