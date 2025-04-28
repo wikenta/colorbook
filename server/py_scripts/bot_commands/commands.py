@@ -32,13 +32,13 @@ async def send_books(message: Message):
             for book in books:
                 response += f"  - {book['name_ru']}"
                 if book['release_year']:
-                    response += f" ({book['release_year']})"
+                    response += f" \({book['release_year']}\)"
                 response += "\n"
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="MarkdownV2")
 
 # Хендлер для команды /books_test
 @router.message(F.text == "/books_test")
-async def send_books(message: Message):
+async def send_books_test(message: Message):
     publishers = await get_publishers()
     if not publishers:
         await message.reply("Издатели не найдены.")
@@ -53,7 +53,7 @@ async def send_books(message: Message):
         for s in series:
             response += f"\n**{s['name_ru']}**\n"
             response += await get_message_child_series_recursive(s['id'])
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="MarkdownV2")
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 1) -> str:
     """
@@ -78,7 +78,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
     for book in books:
         response += f"{'  ' * depth}- {book['name_ru']}"
         if book['release_year']:
-            response += f" ({book['release_year']})"
+            response += f" \({book['release_year']}\)"
         response += "\n"
     
     for child in series:
