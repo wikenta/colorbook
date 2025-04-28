@@ -25,8 +25,7 @@ async def get_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
-    JOIN coloring.volume v ON v.series_id = s.id
-    WHERE v.publisher_id = $1
+    WHERE s.publisher_id = $1
     ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query, publisher_id)
