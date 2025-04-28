@@ -19,8 +19,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "src/*"  # from
-          target: "/colorbook/"  # to
+          source: "server/*"  # from
+          target: "/colorbook/src/test/"  # to
           strip_components: 1
 
       - name: Restart service

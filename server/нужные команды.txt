@@ -12,3 +12,7 @@ cat /colorbook/src/bot.log
 journalctl -u coloring-bot.service -n 50 --no-pager
 journalctl -u coloring-bot.service -f
 sudo journalctl --vacuum-time=1s
+
+sudo chgrp -R app-deployers /colorbook
+sudo chmod -R g+rw /colorbook
+find /colorbook -type d -exec chmod g+rws {} +
