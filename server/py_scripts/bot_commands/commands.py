@@ -60,7 +60,7 @@ def escape_markdown_v2(text: str) -> str:
     """
     Экранирует специальные символы для MarkdownV2
     """
-    special_chars = r"\-*[]()~`>#+=|{}.!"# исключены: _
+    special_chars = r"_\-*[]()~`>#+=|{}.!"
     for char in special_chars:
         text = text.replace(char, f"\\{char}")
     return text
@@ -92,7 +92,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
         response += "\n"
     
     for child in series:
-        response += f"{'  ' * depth}\- __{child['name_ru']}__\n"
+        response += f"{'  ' * depth}- __{child['name_ru']}__\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
