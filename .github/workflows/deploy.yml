@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "server/*"  # from
-          target: "/colorbook/src/test/"  # to
+          target: "/colorbook/src/"  # to
           strip_components: 1
 
       - name: Restart service
@@ -30,4 +30,5 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            rm /colorbook/src/server/setup.sh
             sudo /usr/bin/systemctl restart coloring-bot.service
