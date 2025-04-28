@@ -51,7 +51,7 @@ async def send_books_test(message: Message):
 
         response = f"Издатель: {publisher['name_ru']}\n"
         for s in series:
-            response += f"\n**{s['name_ru']}**\n"
+            response += f"\n__{s['name_ru']}__\n"
             response += await get_message_child_series_recursive(s['id'])
         await message.reply(escape_markdown_v2(response), parse_mode="MarkdownV2")
 
@@ -60,7 +60,7 @@ def escape_markdown_v2(text: str) -> str:
     """
     Экранирует специальные символы для MarkdownV2
     """
-    special_chars = r"\-_*[]()~`>#+=|{}.!"
+    special_chars = r"\-*[]()~`>#+=|{}.!"# исключены: _
     for char in special_chars:
         text = text.replace(char, f"\\{char}")
     return text
@@ -86,13 +86,13 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
 
     response = ""
     for book in books:
-        response += f"{'  ' * depth}\- {book['name_ru']}"
+        response += f"{'  ' * depth}- {book['name_ru']}"
         if book['release_year']:
-            response += f" \({book['release_year']}\)"
+            response += f" ({book['release_year']})"
         response += "\n"
     
     for child in series:
-        response += f"{'  ' * depth}\- **{child['name_ru']}**\n"
+        response += f"{'  ' * depth}\- __{child['name_ru']}__\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
