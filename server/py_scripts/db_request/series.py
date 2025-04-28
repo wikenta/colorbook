@@ -7,10 +7,26 @@ async def get_series() -> List[Dict[str, str]]:
     """
     conn = await get_db_connection()
     query = """
-    SELECT s.id, s.name_en. s.name_ru, sn.full_name_en, sn.full_name_ru
+    SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
-    ORDER BY s.full_name_ru
+    ORDER BY sn.full_name_ru
+    """
+    series = await conn.fetch(query)
+    await conn.close()
+    return series
+
+async def get_root_series() -> List[Dict[str, str]]:
+    """
+    Корневые серии книг: id, name_en, name_ru, full_name_en и full_name_ru
+    """
+    conn = await get_db_connection()
+    query = """
+    SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
+    FROM coloring.series s
+    JOIN coloring.series_full_name sn ON s.id = sn.id
+    WHERE s.parent_series_id IS NULL
+    ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query)
     await conn.close()
@@ -25,9 +41,24 @@ async def get_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
-    JOIN coloring.volume v ON v.series_id = s.id
-    WHERE v.publisher_id = $1
-    ORDER BY s.full_name_ru
+    WHERE s.publisher_id = $1
+    ORDER BY sn.full_name_ru
+    """
+    series = await conn.fetch(query, publisher_id)
+    await conn.close()
+    return series
+
+async def get_root_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
+    """
+    Корневые серии книг по ID издателя: id, name_en, name_ru, full_name_en и full_name_ru
+    """
+    conn = await get_db_connection()
+    query = """
+    SELECT s.id, s.name_en, s.name_ru, sn.full_name_en, sn.full_name_ru
+    FROM coloring.series s
+    JOIN coloring.series_full_name sn ON s.id = sn.id
+    WHERE s.publisher_id = $1 AND s.parent_series_id IS NULL
+    ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query, publisher_id)
     await conn.close()
@@ -58,7 +89,7 @@ async def get_child_series(parent_id: str) -> List[Dict[str, str]]:
     FROM coloring.series s
     JOIN coloring.series_full_name sn ON s.id = sn.id
     WHERE s.parent_series_id = $1
-    ORDER BY s.full_name_ru
+    ORDER BY sn.full_name_ru
     """
     series = await conn.fetch(query, parent_id)
     await conn.close()

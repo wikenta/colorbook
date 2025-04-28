@@ -4,10 +4,9 @@ import signal
 import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from aiogram.types import BotCommand
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
-from bot_commands.commands import router
+from bot_commands.commands import register_routers, set_commands
 from secret import API_TOKEN
 
 # Настройка логирования
@@ -20,23 +19,7 @@ bot = Bot(token=API_TOKEN, default=default_properties)
 
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
-dp.include_router(router)
-
-async def set_commands(bot: Bot):
-    commands = [
-        BotCommand(command="start", description="Запустить бота"),
-        BotCommand(command="books", description="Показать список книг"),
-        #BotCommand(command="test_buttons", description="Тест Inline-кнопок"),
-        #BotCommand(command="test_reply_buttons", description="Тест Reply-кнопок"),
-        #BotCommand(command="remove_buttons", description="Удалить клавиатуру"),
-        #BotCommand(command="test_force_reply", description="Принудительный ответ"),
-        #BotCommand(command="test_callback_args", description="Кнопки с аргументами"),
-        #BotCommand(command="test_emoji_buttons", description="Кнопки с эмодзи"),
-        #BotCommand(command="test_webapp", description="Тест WebApp"),
-        #BotCommand(command="test_payment", description="Тест оплаты (демо)"),
-        #BotCommand(command="test_timer_button", description="Кнопка с таймером")
-    ]
-    await bot.set_my_commands(commands)
+register_routers(dp)
 
 async def shutdown(dispatcher: Dispatcher, bot: Bot):
     await bot.delete_my_commands()  # Опционально: удалить команды при остановке
