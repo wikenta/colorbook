@@ -51,9 +51,9 @@ async def send_books_test(message: Message):
 
         response = f"Издатель: {publisher['name_ru']}\n"
         for s in series:
-            response += f"\n**{s['name_ru']}**\n"
+            response += f"\n<b>{s['name_ru']}</b>\n"
             response += await get_message_child_series_recursive(s['id'])
-        await message.reply(escape_markdown_v2(response), parse_mode="MarkdownV2")
+        await message.reply(response, parse_mode="HTML")
 
 # экранирование символов для MarkdownV2
 def escape_markdown_v2(text: str) -> str:
@@ -92,7 +92,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
         response += "\n"
     
     for child in series:
-        response += f"{'  ' * depth}- **{child['name_ru']}**\n"
+        response += f"{'  ' * depth}- <b>{child['name_ru']}</b>\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
