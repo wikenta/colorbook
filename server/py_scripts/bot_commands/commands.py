@@ -55,16 +55,6 @@ async def send_books_test(message: Message):
             response += await get_message_child_series_recursive(s['id'])
         await message.reply(response, parse_mode="HTML")
 
-# экранирование символов для MarkdownV2
-def escape_markdown_v2(text: str) -> str:
-    """
-    Экранирует специальные символы для MarkdownV2
-    """
-    special_chars = r"_\-[]()~`>#+=|{}.!"#*
-    for char in special_chars:
-        text = text.replace(char, f"\\{char}")
-    return text
-
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
     """
     Рекурсивно получает дочерние серии и формирует сообщение
@@ -73,26 +63,16 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 0) ->
     series = await get_child_series(series_id)
     if not series and not books:
         return "Не заполнено"
-    
-    response = ""
-    # рекурсивный вызов
-    #  - книга
-    #  - серия
-    # рекурсивный вызов
-    #    - книга
-    #    - серия
-    # рекурсивный вызов
-    #      - книга
 
     response = ""
     for book in books:
-        response += f"{'   ' * depth}∙  {book['name_ru']}"
+        response += f"<code>{'   ' * depth} ∙ </code>{book['name_ru']}"
         if book['release_year']:
             response += f" ({book['release_year']})"
         response += "\n"
     
     for child in series:
-        response += f"{'   ' * depth} ⤷ <b>{child['name_ru']}</b>\n"
+        response += f"<code>{'   ' * depth} ⤷ </code><b>{child['name_ru']}</b>\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
