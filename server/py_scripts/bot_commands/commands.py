@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
 from db_request.publisher import get_publishers
-from db_request.series import get_series_by_publisher, get_root_series_by_publisher, get_child_series
+from db_request.series import get_root_series_by_publisher, get_child_series
 from db_request.volume import get_books_by_series
 
 router = Router()
@@ -12,33 +12,6 @@ router = Router()
 # Хендлер для команды /books
 @router.message(F.text == "/books")
 async def send_books(message: Message):
-    publishers = await get_publishers()
-    if not publishers:
-        await message.reply("Издатели не найдены.")
-        return
-    
-    for publisher in publishers:
-        series = await get_series_by_publisher(publisher['id'])
-        if not series:
-            continue
-
-        response = f"Издатель: {publisher['name_ru']}\n"
-        for s in series:
-            books = await get_books_by_series(s['id'])
-            if not books:
-                continue
-
-            response += f"\n{s['full_name_ru']}\n"
-            for book in books:
-                response += f"  - {book['name_ru']}"
-                if book['release_year']:
-                    response += f" ({book['release_year']})"
-                response += "\n"
-        await message.reply(response, parse_mode="Markdown")
-
-# Хендлер для команды /books_test
-@router.message(F.text == "/books_test")
-async def send_books_test(message: Message):
     publishers = await get_publishers()
     if not publishers:
         await message.reply("Издатели не найдены.")
