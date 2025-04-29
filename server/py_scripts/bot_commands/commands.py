@@ -53,7 +53,7 @@ async def send_books_test(message: Message):
         for s in series:
             response += f"\n**{s['name_ru']}**\n"
             response += await get_message_child_series_recursive(s['id'])
-        await message.reply(я escape_markdown_v2(response), parse_mode="MarkdownV2")
+        await message.reply(escape_markdown_v2(response), parse_mode="MarkdownV2")
 
 # экранирование символов для MarkdownV2
 def escape_markdown_v2(text: str) -> str:
