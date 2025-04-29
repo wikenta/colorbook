@@ -86,7 +86,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
 
     response = ""
     for book in books:
-        response += f"{'  ' * depth}    {book['name_ru']}"
+        response += f"{'  ' * depth}      {book['name_ru']}"
         if book['release_year']:
             response += f" ({book['release_year']})"
         response += "\n"
