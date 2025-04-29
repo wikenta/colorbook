@@ -92,7 +92,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 1) ->
         response += "\n"
     
     for child in series:
-        response += f"{'  ' * depth}↳ <b>{child['name_ru']}</b>\n"
+        response += f"{'  ' * depth}⤷ <b>{child['name_ru']}</b>\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
