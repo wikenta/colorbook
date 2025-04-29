@@ -65,7 +65,7 @@ def escape_markdown_v2(text: str) -> str:
         text = text.replace(char, f"\\{char}")
     return text
 
-async def get_message_child_series_recursive (series_id: str, depth: int = 1) -> str:
+async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
     """
     Рекурсивно получает дочерние серии и формирует сообщение
     """
