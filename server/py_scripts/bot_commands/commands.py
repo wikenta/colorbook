@@ -26,7 +26,7 @@ async def send_books(message: Message):
         for s in series:
             response += f"\n<b>{s['name_ru']}</b>\n"
             response += await get_message_child_series_recursive(s['id'])
-        await message.reply(response, parse_mode="HTML")
+        await message.reply(response, parse_mode="Markdown")
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
     """
