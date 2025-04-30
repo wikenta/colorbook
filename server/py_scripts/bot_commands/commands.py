@@ -26,7 +26,7 @@ async def send_books(message: Message):
         for s in series:
             response += f"\n<b>{s['name_ru']}</b>\n"
             response += await get_message_child_series_recursive(s['id'])
-        await message.reply(response, parse_mode="Markdown")
+        await message.reply(response, parse_mode="HTML")
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
     """
@@ -39,13 +39,13 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 0) ->
 
     response = ""
     for book in books:
-        response += f"<code>{'   ' * depth} ∙ </code>{book['name_ru']}"
+        response += f"{'   ' * depth} ∙   {book['name_ru']}"
         if book['release_year']:
             response += f" ({book['release_year']})"
         response += "\n"
     
     for child in series:
-        response += f"<code>{'   ' * depth} ⤷ </code><b>{child['name_ru']}</b>\n"
+        response += f"{'   ' * depth} ⤷ <b>{child['name_ru']}</b>\n"
         response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
