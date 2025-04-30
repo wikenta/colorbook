@@ -35,7 +35,7 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 0) ->
     books = await get_books_by_series(series_id)
     series = await get_child_series(series_id)
     if not series and not books:
-        return "Не заполнено"
+        return f"{'   ' * depth}     Не заполнено\n"
 
     response = ""
     for book in books:
