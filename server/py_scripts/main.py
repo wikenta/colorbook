@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
-from bot_commands.commands import router, set_commands
+from bot_commands.commands import register_routers, set_commands
 from secret import API_TOKEN
 
 # Настройка логирования
@@ -19,7 +19,7 @@ bot = Bot(token=API_TOKEN, default=default_properties)
 
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
-dp.include_router(router)
+register_routers(dp)
 
 async def shutdown(dispatcher: Dispatcher, bot: Bot):
     await bot.delete_my_commands()  # Опционально: удалить команды при остановке

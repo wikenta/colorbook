@@ -1,6 +1,7 @@
-from aiogram import F
+from aiogram import F, Router
 from aiogram.types import Message
-from commands import router
+
+router = Router()
 
 # Приветственное сообщение
 @router.message(F.text == "/start")

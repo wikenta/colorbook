@@ -1,9 +1,10 @@
-from aiogram import F
+from aiogram import F, Router
 from aiogram.types import Message
 from db_request.publisher import get_publishers
 from db_request.series import get_root_series_by_publisher, get_child_series
 from db_request.volume import get_books_by_series
-from commands import router
+
+router = Router()
 
 # Отображение списка всех книг
 @router.message(F.text == "/books")

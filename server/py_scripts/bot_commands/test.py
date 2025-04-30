@@ -1,9 +1,10 @@
 import asyncio
-from aiogram import F
+from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
-from commands import router
+
+router = Router()
 
 buttons = [
     [InlineKeyboardButton(text="Кнопка 1", callback_data="button1")],

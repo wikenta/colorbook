@@ -1,7 +1,13 @@
-from aiogram import Router, Bot
+from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
+from start import router as start_router
+from books import router as books_router
+from test import router as test_router
 
-router = Router()
+def register_routers(dp: Dispatcher):
+    dp.include_router(start_router)
+    dp.include_router(books_router)
+    dp.include_router(test_router)
 
 async def set_commands(bot: Bot):
     commands = [
