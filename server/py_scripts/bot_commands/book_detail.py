@@ -38,12 +38,12 @@ async def show_publishers(message: Message, first_message: bool = False):
     
     response = "Выберите издателя:\n\n"
     for publisher in publishers:
-        response += f" ∙   {publisher.name_ru}\n"
+        response += f" ∙   {publisher['name_ru']}\n"
     
     buttons = [
         [InlineKeyboardButton(
-            text=publisher.name_ru, 
-            callback_data=PATH_PUBLISHER + str(publisher.id))]
+            text=publisher['name_ru'], 
+            callback_data=PATH_PUBLISHER + str(publisher['id']))]
         for publisher in publishers
     ]
 
@@ -71,7 +71,7 @@ async def handle_publisher(callback_query: CallbackQuery):
             parse_mode="HTML")
         return
     
-    message = f"Издатель: {publisher.name_ru}\n\n"
+    message = f"Издатель: {publisher['name_ru']}\n\n"
     series = await get_root_series_by_publisher(publisher_id)
     books = await get_books_by_publisher_without_series(publisher_id)
     if not series and not books:
@@ -86,21 +86,21 @@ async def handle_publisher(callback_query: CallbackQuery):
     
     series_message = "Серии:\n\n"
     for series in series:
-        series_message += f" ∙   {series.name_ru}\n"
+        series_message += f" ∙   {series['name_ru']}\n"
     books_message = "Книги без серии:\n\n"
     for book in books:
-        books_message += f" ∙   {book.name_ru}\n"
+        books_message += f" ∙   {book['name_ru']}\n"
 
     series_buttons = [
         InlineKeyboardButton(
-            text=series.name_ru, 
-            callback_data=PATH_SERIES + str(series.id))
+            text=series['name_ru'], 
+            callback_data=PATH_SERIES + str(series['id']))
         for series in series
     ]
     books_buttons = [
         InlineKeyboardButton(
-            text=book.name_ru, 
-            callback_data=PATH_BOOK + str(book.id))
+            text=book['name_ru'], 
+            callback_data=PATH_BOOK + str(book['id']))
         for book in books
     ]
 
