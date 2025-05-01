@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
-from start import router as start_router
+from welcome import router as start_router
 from books import router as books_router
 from test import router as test_router
 
