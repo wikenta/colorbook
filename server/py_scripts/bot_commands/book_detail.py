@@ -3,7 +3,7 @@ import asyncio
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
-from db_request.publisher import get_publishers
+from db_request.publisher import get_publishers, get_publisher_by_id
 from db_request.series import get_root_series_by_publisher, get_child_series
 from db_request.volume import get_books_by_series
 
@@ -51,11 +51,23 @@ async def show_publishers(message: Message, first_message: bool = False):
 @router.callback_query(F.data.startswith("publisher_"))
 async def handle_publisher(callback_query: CallbackQuery):
     publisher_id = callback_query.data.split("_")[1]
+    publisher = await get_publisher_by_id(publisher_id)
+    if not publisher:
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Вернуться к издателям", callback_data="back_to_publishers")]
+        ])
+        await callback_query.message.edit_text(
+            "Издатель не найден.",
+            reply_markup=keyboard, 
+            parse_mode="HTML")
+        return
+    
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Вернуться к издателям", callback_data="back_to_publishers")]
     ])
     await callback_query.message.edit_text(
-        f"Id издателя: {publisher_id}",
+        f"Издатель: {publisher['name_ru']}\n\n"
+        f"Id издателя: {publisher_id}"
         reply_markup=keyboard,
         parse_mode="HTML"
     )
