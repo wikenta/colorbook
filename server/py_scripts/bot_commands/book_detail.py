@@ -96,17 +96,17 @@ async def handle_publisher(callback_query: CallbackQuery):
         return
     
     series_message = "Серии:\n\n"
-    for series in series:
-        series_message += f" ∙   {series['name_ru']}\n"
+    for s in series:
+        series_message += f" ∙   {s['name_ru']}\n"
     books_message = "Книги без серии:\n\n"
     for book in books:
         books_message += f" ∙   {book['name_ru']}\n"
 
     series_buttons = [
         InlineKeyboardButton(
-            text=series['name_ru'], 
-            callback_data=PATH_SERIES + str(series['id']))
-        for series in series
+            text=s['name_ru'], 
+            callback_data=PATH_SERIES + str(s['id']))
+        for s in series
     ]
     books_buttons = [
         InlineKeyboardButton(
