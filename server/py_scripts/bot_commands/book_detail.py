@@ -1,5 +1,5 @@
+import uuid
 from aiogram import F, Router
-import asyncio
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
@@ -38,16 +38,16 @@ async def show_publishers(message: Message, first_message: bool = False):
     
     response = "Выберите издателя:\n\n"
     for publisher in publishers:
-        response += f" ∙   {publisher['name_ru']}\n"
+        response += f" ∙   {publisher["name_ru"]}\n"
     
-    buttons = [
+    publisher_buttons = [
         [InlineKeyboardButton(
-            text=publisher['name_ru'], 
-            callback_data=PATH_PUBLISHER + str(publisher['id']))]
+            text=publisher["name_ru"], 
+            callback_data=PATH_PUBLISHER + str(publisher["id"]))]
         for publisher in publishers
     ]
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+    keyboard = InlineKeyboardMarkup(inline_keyboard=publisher_buttons)
     if first_message:
         await message.answer(response, reply_markup=keyboard, parse_mode="HTML")
     else:
