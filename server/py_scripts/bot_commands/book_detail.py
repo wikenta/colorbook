@@ -38,12 +38,12 @@ async def show_publishers(message: Message, first_message: bool = False):
     
     response = "Выберите издателя:\n\n"
     for publisher in publishers:
-        response += f" ∙   {publisher["name_ru"]}\n"
+        response += f" ∙   {publisher['name_ru']}\n"
     
     publisher_buttons = [
         [InlineKeyboardButton(
-            text=publisher["name_ru"], 
-            callback_data=PATH_PUBLISHER + str(publisher["id"]))]
+            text=publisher['name_ru'], 
+            callback_data=PATH_PUBLISHER + str(publisher['id']))]
         for publisher in publishers
     ]
 
@@ -58,8 +58,19 @@ async def handle_publisher(callback_query: CallbackQuery):
     return_button = InlineKeyboardButton(
         text="Вернуться к издателям", 
         callback_data=PATH_PUBLISHERS)
+    
+    try:
+        publisher_id = uuid.UUID(callback_query.data.removeprefix(PATH_PUBLISHER))
+    except ValueError:
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [return_button]
+        ])
+        await callback_query.message.edit_text(
+            "Некорректный ID издателя.",
+            reply_markup=keyboard, 
+            parse_mode="HTML")
+        return
 
-    publisher_id = callback_query.data.split("_")[-1]
     publisher = await get_publisher_by_id(publisher_id)
     if not publisher:
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
