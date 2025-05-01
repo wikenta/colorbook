@@ -5,17 +5,24 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardBu
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
 from db_request.publisher import get_publishers, get_publisher_by_id
 from db_request.series import get_root_series_by_publisher, get_child_series
-from db_request.volume import get_books_by_series
+from db_request.volume import get_books_by_series, get_books_by_publisher_without_series
 
 router = Router()
 
+# Пути, используемые в этом файле:
+PATH_ENTRY_POINT = "/book_detail"
+PATH_PUBLISHERS = "detail_publishers"
+PATH_PUBLISHER = "detail_publisher_"
+PATH_SERIES = "detail_series_"
+PATH_BOOK = "detail_book_"
+
 # Точка входа
-@router.message(F.text == "/book_detail")
+@router.message(F.text == PATH_ENTRY_POINT)
 async def send_book_detail(message: Message):
     await show_publishers(message, first_message=True)
 
 # когда пользователь нажимает "вернуться к издателям", показываем список издателей
-@router.callback_query(F.data == "back_to_publishers")
+@router.callback_query(F.data == PATH_PUBLISHERS)
 async def back_to_publishers(callback_query: CallbackQuery):
     await show_publishers(callback_query.message)
 
@@ -34,7 +41,9 @@ async def show_publishers(message: Message, first_message: bool = False):
         response += f" ∙   {publisher['name_ru']}\n"
     
     buttons = [
-        [InlineKeyboardButton(text=publisher['name_ru'], callback_data=f"publisher_{publisher['id']}")]
+        [InlineKeyboardButton(
+            text=publisher['name_ru'], 
+            callback_data=PATH_PUBLISHER + str(publisher['id']))]
         for publisher in publishers
     ]
 
@@ -44,17 +53,17 @@ async def show_publishers(message: Message, first_message: bool = False):
     else:
         await message.edit_text(response, reply_markup=keyboard, parse_mode="HTML")
 
-# когда пользователь выбирает издателя:
-# показываем кнопку "вернуться к издателям"
-# пишем в сообщении: "Id издателя: {id}"
-# Id в базе данных UUID
-@router.callback_query(F.data.startswith("publisher_"))
+@router.callback_query(F.data.startswith(PATH_PUBLISHER))
 async def handle_publisher(callback_query: CallbackQuery):
-    publisher_id = callback_query.data.split("_")[1]
+    return_button = InlineKeyboardButton(
+        text="Вернуться к издателям", 
+        callback_data=PATH_PUBLISHERS)
+
+    publisher_id = callback_query.data.split("_")[-1]
     publisher = await get_publisher_by_id(publisher_id)
     if not publisher:
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="Вернуться к издателям", callback_data="back_to_publishers")]
+            [return_button]
         ])
         await callback_query.message.edit_text(
             "Издатель не найден.",
@@ -62,12 +71,48 @@ async def handle_publisher(callback_query: CallbackQuery):
             parse_mode="HTML")
         return
     
+    message = f"Издатель: {publisher['name_ru']}\n\n"
+    series = await get_root_series_by_publisher(publisher_id)
+    books = await get_books_by_publisher_without_series(publisher_id)
+    if not series and not books:
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [return_button]
+        ])
+        await callback_query.message.edit_text(
+            message + "У этого издателя не заполнены книги",
+            reply_markup=keyboard, 
+            parse_mode="HTML")
+        return
+    
+    series_message = "Серии:\n\n"
+    for series in series:
+        series_message += f" ∙   {series['name_ru']}\n"
+    books_message = "Книги без серии:\n\n"
+    for book in books:
+        books_message += f" ∙   {book['name_ru']}\n"
+
+    series_buttons = [
+        InlineKeyboardButton(
+            text=series['name_ru'], 
+            callback_data=PATH_SERIES + str(series['id']))
+        for series in series
+    ]
+    books_buttons = [
+        InlineKeyboardButton(
+            text=book['name_ru'], 
+            callback_data=PATH_BOOK + str(book['id']))
+        for book in books
+    ]
+
+    message += series_message + books_message
+
+    buttons = series_buttons + books_buttons + [return_button]
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Вернуться к издателям", callback_data="back_to_publishers")]
+        [button] for button in buttons
     ])
+
     await callback_query.message.edit_text(
-        f"Издатель: {publisher['name_ru']}\n\n"
-        f"Id издателя: {publisher_id}",
+        message,
         reply_markup=keyboard,
         parse_mode="HTML"
     )
