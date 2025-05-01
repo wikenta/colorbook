@@ -162,18 +162,7 @@ async def handle_series(callback_query: CallbackQuery):
         return
     
     message = f"Серия: {series['full_name_ru']}\n"
-    try:
-        publisher_id = uuid.UUID(series['publisher_id'])
-    except ValueError:
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [return_main_button]
-        ])
-        await callback_query.message.edit_text(
-            message + "Некорректный ID издателя",
-            reply_markup=keyboard, 
-            parse_mode="HTML")
-        return
-    
+    publisher_id = series['publisher_id']
     publisher = await get_publisher_by_id(publisher_id)
     if not publisher:
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
