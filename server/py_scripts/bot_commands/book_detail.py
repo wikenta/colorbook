@@ -23,6 +23,12 @@ async def show_publishers(message: Message):
     
     response = "Выберите издателя:\n\n"
     for publisher in publishers:
-        response += f" ∙   {publisher['name_ru']}\n"        
+        response += f" ∙   {publisher['name_ru']}\n"
     
-    await message.reply(response, parse_mode="HTML")
+    buttons = [
+        [InlineKeyboardButton(text=publisher['name_ru'], callback_data=f"publisher_{publisher['id']}")]
+        for publisher in publishers
+    ]
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+    await message.reply(response, reply_markup=keyboard, parse_mode="HTML")
