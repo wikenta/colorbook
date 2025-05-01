@@ -119,7 +119,9 @@ async def handle_publisher(callback_query: CallbackQuery):
 
     message += series_message + books_message
 
-    buttons = series_buttons[:9] + [return_button]
+    buttons = series_buttons + books_buttons
+    # первые 9 кнопок + кнопка "вернуться к издателям"
+    buttons = buttons[:9] + [return_button]
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [button] for button in buttons
     ])
@@ -194,4 +196,4 @@ async def handle_series(callback_query: CallbackQuery):
             [return_main_button]
         ]),
         parse_mode="HTML"
-    ) 
+    )
