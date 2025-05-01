@@ -15,14 +15,14 @@ async def send_books(message: Message):
         return
     
     for publisher in publishers:
-        series = await get_root_series_by_publisher(publisher["id"])
+        series = await get_root_series_by_publisher(publisher['id'])
         if not series:
             continue
 
-        response = f"Издатель: {publisher["name_ru"]}\n"
+        response = f"Издатель: {publisher['name_ru']}\n"
         for s in series:
-            response += f"\n<b>{s["name_ru"]}</b>\n"
-            response += await get_message_child_series_recursive(s["id"])
+            response += f"\n<b>{s['name_ru']}</b>\n"
+            response += await get_message_child_series_recursive(s['id'])
         await message.reply(response, parse_mode="HTML")
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
@@ -36,13 +36,13 @@ async def get_message_child_series_recursive (series_id: str, depth: int = 0) ->
 
     response = ""
     for book in books:
-        response += f"{'   ' * depth} ∙   {book["name_ru"]}"
-        if book["release_year"]:
-            response += f" ({book["release_year"]})"
+        response += f"{'   ' * depth} ∙   {book['name_ru']}"
+        if book['release_year']:
+            response += f" ({book['release_year']})"
         response += "\n"
     
     for child in series:
-        response += f"{'   ' * depth} ⤷ <b>{child["name_ru"]}</b>\n"
-        response += await get_message_child_series_recursive(child["id"], depth + 1)
+        response += f"{'   ' * depth} ⤷ <b>{child['name_ru']}</b>\n"
+        response += await get_message_child_series_recursive(child['id'], depth + 1)
 
     return response
