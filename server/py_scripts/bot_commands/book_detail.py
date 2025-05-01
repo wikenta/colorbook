@@ -106,7 +106,7 @@ async def handle_publisher(callback_query: CallbackQuery):
 
     message += series_message + books_message
 
-    buttons = series_buttons + books_buttons + [return_button]
+    buttons = series_buttons + [return_button]
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [button] for button in buttons
     ])
