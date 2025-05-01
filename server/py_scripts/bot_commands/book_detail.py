@@ -12,7 +12,7 @@ router = Router()
 # Отображение подробной информации о книге
 @router.message(F.text == "/book_detail")
 async def send_book_detail(message: Message):
-    show_publishers(message)
+    await show_publishers(message)
 
 # показать первое сообщение: список издателей
 async def show_publishers(message: Message):
