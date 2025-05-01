@@ -67,7 +67,7 @@ async def handle_publisher(callback_query: CallbackQuery):
     ])
     await callback_query.message.edit_text(
         f"Издатель: {publisher['name_ru']}\n\n"
-        f"Id издателя: {publisher_id}"
+        f"Id издателя: {publisher_id}",
         reply_markup=keyboard,
         parse_mode="HTML"
     )
