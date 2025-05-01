@@ -1,7 +1,8 @@
+from asyncpg import Record
+from typing import Optional, List
 from db_request.db_connect import get_db_connection
-from typing import Optional, Dict, List
 
-async def get_series() -> List[Dict[str, str]]: 
+async def get_series() -> List[Record]: 
     """
     Все серии книг: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -16,7 +17,7 @@ async def get_series() -> List[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_root_series() -> List[Dict[str, str]]:
+async def get_root_series() -> List[Record]:
     """
     Корневые серии книг: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -32,7 +33,7 @@ async def get_root_series() -> List[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
+async def get_series_by_publisher(publisher_id: str) -> List[Record]:
     """
     Все серии книг по ID издателя: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -48,7 +49,7 @@ async def get_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_root_series_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
+async def get_root_series_by_publisher(publisher_id: str) -> List[Record]:
     """
     Корневые серии книг по ID издателя: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -64,7 +65,7 @@ async def get_root_series_by_publisher(publisher_id: str) -> List[Dict[str, str]
     await conn.close()
     return series
 
-async def get_series_by_id(series_id: str) -> Optional[Dict[str, str]]:
+async def get_series_by_id(series_id: str) -> Optional[Record]:
     """
     Серия книг по ID: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -79,7 +80,7 @@ async def get_series_by_id(series_id: str) -> Optional[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_child_series(parent_id: str) -> List[Dict[str, str]]:
+async def get_child_series(parent_id: str) -> List[Record]:
     """
     Вложенные серии книг: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -95,7 +96,7 @@ async def get_child_series(parent_id: str) -> List[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_all_child_series(series_id: str) -> List[Dict[str, str]]:
+async def get_all_child_series(series_id: str) -> List[Record]:
     """
     Все вложенные серии книг: id, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -121,7 +122,7 @@ async def get_all_child_series(series_id: str) -> List[Dict[str, str]]:
     await conn.close()
     return series
 
-async def get_all_parent_series(series_id: str) -> List[Dict[str, str]]:
+async def get_all_parent_series(series_id: str) -> List[Record]:
     """
     Все родительские серии книг: id, name_en, name_ru, full_name_en и full_name_ru
     """

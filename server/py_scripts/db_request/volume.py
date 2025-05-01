@@ -1,7 +1,8 @@
+from asyncpg import Record
+from typing import Optional, List
 from db_request.db_connect import get_db_connection
-from typing import Optional, Dict, List
 
-async def get_all_books() -> List[Dict[str, str]]:
+async def get_all_books() -> List[Record]:
     """
     Все книги: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -16,7 +17,7 @@ async def get_all_books() -> List[Dict[str, str]]:
     await conn.close()
     return books
 
-async def get_books_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
+async def get_books_by_publisher(publisher_id: str) -> List[Record]:
     """
     Все книги по ID издателя: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -32,7 +33,7 @@ async def get_books_by_publisher(publisher_id: str) -> List[Dict[str, str]]:
     await conn.close()
     return books
 
-async def get_books_by_publisher_without_series(publisher_id: str) -> List[Dict[str, str]]:
+async def get_books_by_publisher_without_series(publisher_id: str) -> List[Record]:
     """
     Все книги по ID издателя без серий: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -48,7 +49,7 @@ async def get_books_by_publisher_without_series(publisher_id: str) -> List[Dict[
     await conn.close()
     return books
 
-async def get_books_by_series(series_id: str) -> List[Dict[str, str]]:
+async def get_books_by_series(series_id: str) -> List[Record]:
     """
     Все книги по ID серии: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -64,7 +65,7 @@ async def get_books_by_series(series_id: str) -> List[Dict[str, str]]:
     await conn.close()
     return books
 
-async def get_books_by_id(book_id: str) -> Optional[Dict[str, str]]:
+async def get_books_by_id(book_id: str) -> Optional[Record]:
     """
     Книга по ID: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """
@@ -79,7 +80,7 @@ async def get_books_by_id(book_id: str) -> Optional[Dict[str, str]]:
     await conn.close()
     return book
 
-async def get_all_books_in_series(series_id: str) -> List[Dict[str, str]]:
+async def get_all_books_in_series(series_id: str) -> List[Record]:
     """
     Все книги в серии: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru
     """

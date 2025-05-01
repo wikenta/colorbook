@@ -1,7 +1,8 @@
+from asyncpg import Record
+from typing import Optional, List
 from db_request.db_connect import get_db_connection
-from typing import Optional, Dict, List
 
-async def get_publishers() -> List[Dict[str, str]]:
+async def get_publishers() -> List[Record]:
     """
     Все издатели: id, name_en и name_ru
     """
@@ -10,7 +11,7 @@ async def get_publishers() -> List[Dict[str, str]]:
     await conn.close()
     return publishers
 
-async def get_publisher_by_id(publisher_id: str) -> Optional[Dict[str, str]]:
+async def get_publisher_by_id(publisher_id: str) -> Optional[Record]:
     """
     Издатель по ID: id, name_en и name_ru
     """
