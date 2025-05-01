@@ -10,8 +10,8 @@ buttons = [
     [InlineKeyboardButton(text="Кнопка 1", callback_data="button1")],
     [InlineKeyboardButton(text="Кнопка 2", callback_data="button2")],
     [InlineKeyboardButton(text="Кнопка 3", callback_data="button3")],
-    [InlineKeyboardButton(text="URL-кнопка", url="https://example.com")],
-    [InlineKeyboardButton(text="Логин", login_url=LoginUrl(url="https://example.com/login"))],
+    #[InlineKeyboardButton(text="URL-кнопка", url="https://example.com")],
+    #[InlineKeyboardButton(text="Логин", login_url=LoginUrl(url="https://example.com/login"))],
     [InlineKeyboardButton(text="Запросить контакт", callback_data="request_contact")],
     [InlineKeyboardButton(text="Запросить локацию", callback_data="request_location")]
 ]
