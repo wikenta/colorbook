@@ -1,4 +1,4 @@
-import uuid, copy
+import uuid, copy, logging
 from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
@@ -10,6 +10,7 @@ from db_request.volume import get_books_by_series, get_books_by_publisher_withou
 from db_request.cover_file import get_cover_files
 
 router = Router()
+logger = logging.getLogger("colorbook")
 
 # Пути, используемые в этом файле:
 PATH_ENTRY_POINT = "/book_detail"
@@ -199,6 +200,7 @@ async def handle_book(callback_query: CallbackQuery):
     try:
         book_id = uuid.UUID(callback_query.data.removeprefix(PATH_BOOK))
     except ValueError:
+        logger.error(f"Некорректный ID книги: {callback_query.data}")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [BUTTON_MAIN]
         ])
@@ -210,6 +212,7 @@ async def handle_book(callback_query: CallbackQuery):
 
     book = await get_book_by_id(book_id)
     if not book:
+        logger.error(f"Книга не найдена: {book_id}")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [BUTTON_MAIN]
         ])
@@ -224,6 +227,7 @@ async def handle_book(callback_query: CallbackQuery):
     publisher_id = book['publisher_id']
     publisher = await get_publisher_by_id(publisher_id)
     if not publisher:
+        logger.error(f"Издатель не найден: {publisher_id}")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [BUTTON_MAIN]
         ])
@@ -240,6 +244,7 @@ async def handle_book(callback_query: CallbackQuery):
     
     covers = await get_cover_files(book_id)
     if not covers:
+        logger.error(f"Обложка не найдена: {book_id}")
         await callback_query.message.edit_text(
             message,
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -251,8 +256,10 @@ async def handle_book(callback_query: CallbackQuery):
         return
     
     photo = FSInputFile('/colorbook/files/'+covers[0]['file_path'])
-    callback_query.message.delete()
-    callback_query.message.answer_photo(
+    logger.info(f"Обложка найдена: {photo.path}")
+    await callback_query.message.delete()
+    logger.info(f"Сообщение удалено: {callback_query.message.message_id}")
+    await callback_query.message.answer_photo(
         photo=photo,
         caption=message,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -260,8 +267,8 @@ async def handle_book(callback_query: CallbackQuery):
             [BUTTON_MAIN]
         ]),
         parse_mode="HTML"
-    )      
-    
+    )    
+    logger.info(f"Сообщение отправлено: {callback_query.message.message_id}")
 
 def get_button(button: InlineKeyboardButton, text: str = None, callback_data: str = None) -> InlineKeyboardButton:
     """
