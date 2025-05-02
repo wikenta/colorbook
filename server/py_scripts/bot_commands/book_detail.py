@@ -3,7 +3,7 @@ from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
-from aiogram.types import InputMediaPhoto, InputFile
+from aiogram.types import InputMediaPhoto, FSInputFile
 from db_request.publisher import get_publishers, get_publisher_by_id
 from db_request.series import get_root_series_by_publisher, get_child_series, get_series_by_id
 from db_request.volume import get_books_by_series, get_books_by_publisher_without_series, get_book_by_id
@@ -250,7 +250,7 @@ async def handle_book(callback_query: CallbackQuery):
         )
         return
     
-    photo = InputFile('/colorbook/files/'+covers[0]['file_path'])
+    photo = FSInputFile('/colorbook/files/'+covers[0]['file_path'])
     callback_query.message.delete()
     callback_query.message.answer_photo(
         photo=photo,
