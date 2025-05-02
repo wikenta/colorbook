@@ -95,14 +95,16 @@ async def handle_publisher(callback_query: CallbackQuery):
             parse_mode="HTML")
         return
     
-    series_message = "Серии:\n"
-    for s in series:
-        series_message += f" ∙   {s['name_ru']}\n"
-    series_message += "\n"
-    books_message = "Книги без серии:\n"
-    for book in books:
-        books_message += f" ∙   {book['name_ru']}\n"
-    books_message += "\n"
+    if series:
+        message += "Серии:\n"
+        for s in series:
+            message += f" ∙   {s['name_ru']}\n"
+        message += "\n"
+    if books:
+        message += "Книги без серии:\n"
+        for book in books:
+            message += f" ∙   {book['name_ru']}\n"
+        message += "\n"
 
     series_buttons = [
         InlineKeyboardButton(
@@ -116,9 +118,6 @@ async def handle_publisher(callback_query: CallbackQuery):
             callback_data=PATH_BOOK + str(book['id']))
         for book in books
     ]
-
-    message += series_message + books_message
-
     buttons = series_buttons + books_buttons
     # первые 9 кнопок + кнопка "вернуться к издателям"
     buttons = buttons[:9] + [return_button]
