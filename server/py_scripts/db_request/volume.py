@@ -65,7 +65,7 @@ async def get_books_by_series(series_id: str) -> List[Record]:
     await conn.close()
     return books
 
-async def get_books_by_id(book_id: str) -> Optional[Record]:
+async def get_book_by_id(book_id: str) -> Optional[Record]:
     """
     Книга по ID: id, release_year, page_count, name_en, name_ru, full_name_en и full_name_ru, publisher_id
     """

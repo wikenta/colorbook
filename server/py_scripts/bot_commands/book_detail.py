@@ -3,9 +3,11 @@ from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, LoginUrl
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, WebAppInfo, LabeledPrice
+from aiogram.types import InputMediaPhoto, InputFile
 from db_request.publisher import get_publishers, get_publisher_by_id
 from db_request.series import get_root_series_by_publisher, get_child_series, get_series_by_id
-from db_request.volume import get_books_by_series, get_books_by_publisher_without_series, get_books_by_id
+from db_request.volume import get_books_by_series, get_books_by_publisher_without_series, get_book_by_id
+from db_request.cover_file import get_cover_files
 
 router = Router()
 
@@ -206,7 +208,7 @@ async def handle_book(callback_query: CallbackQuery):
             parse_mode="HTML")
         return
 
-    book = await get_books_by_id(book_id)
+    book = await get_book_by_id(book_id)
     if not book:
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [BUTTON_MAIN]
@@ -231,18 +233,35 @@ async def handle_book(callback_query: CallbackQuery):
             parse_mode="HTML")
         return
     message += f"Издатель: {publisher['name_ru']}\n"
-    
+
     button_publisher = InlineKeyboardButton(
         text=publisher['name_ru'], 
         callback_data=PATH_PUBLISHER + str(publisher_id))
-    await callback_query.message.edit_text(
-        message,
+    
+    covers = await get_cover_files(book_id)
+    if not covers:
+        await callback_query.message.edit_text(
+            message,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [button_publisher],
+                [BUTTON_MAIN]
+            ]),
+            parse_mode="HTML"
+        )
+        return
+    
+    photo = InputFile('/colorbook/files/'+covers[0]['file_path'])
+    callback_query.message.delete()
+    callback_query.message.answer_photo(
+        photo=photo,
+        caption=message,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [button_publisher],
             [BUTTON_MAIN]
         ]),
         parse_mode="HTML"
-    )
+    )      
+    
 
 def get_button(button: InlineKeyboardButton, text: str = None, callback_data: str = None) -> InlineKeyboardButton:
     """
