@@ -1,6 +1,6 @@
 from aiogram.types import Message
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import InputFile, InputMediaPhoto
+from aiogram.types import FSInputFile, InputMediaPhoto
 from aiogram.exceptions import TelegramBadRequest
 from typing import Optional
 import logging, os
@@ -58,7 +58,7 @@ async def send_photo(
     """
     try:
         if os.path.isfile(path):
-            path = InputFile(path)
+            path = FSInputFile(path)
         else:
             logger.error(f"Файл не найден: {path}")
             return
@@ -123,7 +123,7 @@ async def send_group_photo(
             return
         
         media = [
-            InputMediaPhoto(media=InputFile(photo))
+            InputMediaPhoto(media=FSInputFile(photo))
             for photo in valid_files
         ]
         media[0].caption = text
