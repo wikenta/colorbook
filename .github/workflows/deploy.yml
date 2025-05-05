@@ -31,4 +31,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             rm /colorbook/src/server/setup.sh
+            rm /colorbook/bot.err
             sudo /usr/bin/systemctl restart coloring-bot.service
