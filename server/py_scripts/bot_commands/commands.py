@@ -17,7 +17,7 @@ def register_routers(dp: Dispatcher):
 
 async def set_commands(bot: Bot):
     commands = [
-        BotCommand(command="start", description="Запустить бота"),
+        BotCommand(command="start", description="Приветствие"),
         BotCommand(command="books", description="Показать список книг"),
         BotCommand(command="book_detail", description="Показать подробную информацию о книге"),
         BotCommand(command="test_buttons", description="Тест кнопок")

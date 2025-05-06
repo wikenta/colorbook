@@ -1,4 +1,4 @@
-name: Deploy to the Server
+name: Deploy to the Server (develop)
 
 on:
   push:
@@ -30,6 +30,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            rm /colorbook-dev/src/server/setup.sh
-            rm /colorbook-dev/bot.err
+            rm -f /colorbook-dev/src/setup.sh
+            rm -f /colorbook-dev/bot.log
+            rm -f /colorbook-dev/bot.err
             sudo /usr/bin/systemctl restart coloring-bot-dev.service
