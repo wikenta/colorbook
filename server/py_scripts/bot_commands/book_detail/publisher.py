@@ -25,6 +25,7 @@ BUTTON_MAIN = InlineKeyboardButton(
 # Точка входа
 @router.message(F.text == PATH_ENTRY_POINT)
 async def send_book_detail(message: Message):
+    await message.delete()
     await show_publishers(message, first_message=True)
 
 # когда пользователь нажимает "вернуться к издателям", показываем список издателей

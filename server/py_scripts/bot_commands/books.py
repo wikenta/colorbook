@@ -9,6 +9,7 @@ router = Router()
 # Отображение списка всех книг
 @router.message(F.text == "/books")
 async def send_books(message: Message):
+    await message.delete()
     publishers = await get_publishers()
     if not publishers:
         await message.reply("Издатели не найдены.")
