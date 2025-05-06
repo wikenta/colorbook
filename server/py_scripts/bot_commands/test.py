@@ -11,7 +11,7 @@ buttons = [
 
 @router.message(F.text == "/test_buttons")
 async def test_buttons(message: Message):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[b for b in buttons])
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[b] for b in buttons])
     await message.reply("Нажмите кнопку:", reply_markup=keyboard)
 
 @router.callback_query(F.data == "button")
