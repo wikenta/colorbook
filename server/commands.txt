@@ -5,7 +5,6 @@ sudo systemctl start coloring-bot.service
 sudo systemctl restart coloring-bot.service
 sudo systemctl status coloring-bot.service
 
-tail -n 50 /colorbook/src/bot.log
 cat /colorbook/src/bot.log
 > /colorbook/src/bot.log
 

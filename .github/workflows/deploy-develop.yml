@@ -3,7 +3,7 @@ name: Deploy to the Server
 on:
   push:
     branches:
-      - main  # Срабатывает при пуше в ветку main
+      - develop
 
 jobs:
   deploy:
@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "server/*"  # from
-          target: "/colorbook/src/"  # to
+          target: "/colorbook-dev/src/"  # to
           strip_components: 1
 
       - name: Restart service
@@ -30,6 +30,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            rm /colorbook/src/server/setup.sh
-            rm /colorbook/bot.err
-            sudo /usr/bin/systemctl restart coloring-bot.service
+            rm /colorbook-dev/src/server/setup.sh
+            rm /colorbook-dev/bot.err
+            sudo /usr/bin/systemctl restart coloring-bot-dev.service
