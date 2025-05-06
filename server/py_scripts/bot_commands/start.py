@@ -7,7 +7,7 @@ router = Router()
 async def cmd_start(message: Message):
     await message.delete()
     text = (
-        "Привет! Бот еще разрабатывается\n"
+        "Привет!\n"
         "\n"
         "Доступно сейчас:\n"
         " - посмотреть список выпущенных книг (дополняется)\n"
