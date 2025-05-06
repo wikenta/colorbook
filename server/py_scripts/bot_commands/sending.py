@@ -23,24 +23,17 @@ async def send_message(
                 [b] for b in buttons]
             )
 
-        if new_answer:
-            send_func = message.answer
-        elif message.media_group_id:
-            send_func = message.answer
+        if new_answer or message.media_group_id:
+            await message.answer(text, parse_mode=parse_mode, reply_markup=keyboard, reply_parameters=None)
         elif message.photo:
             try:
                 await message.delete()
             except TelegramBadRequest:
                 logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
-            send_func = message.answer
+            await message.answer(text, parse_mode=parse_mode, reply_markup=keyboard, reply_parameters=None)
         else:
-            send_func = message.edit_text
-        
-        await send_func(
-            text=text,
-            reply_markup=keyboard, 
-            parse_mode=parse_mode
-        )
+            await message.edit_text(text, parse_mode=parse_mode, reply_markup=keyboard)
+
     except TelegramBadRequest as e:
         if e.message != "Message is not modified":
             logger.error(f"Ошибка при отправке сообщения: {e}")
@@ -58,45 +51,47 @@ async def send_photo(
     """
     try:
         if os.path.isfile(path):
-            path = FSInputFile(path)
+            photo = FSInputFile(path)
         else:
             logger.error(f"Файл не найден: {path}")
             return
-        
+
         keyboard = None
         if buttons:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [b] for b in buttons]
             )
 
-        if new_answer:
-            send_func = message.answer_photo
-        elif message.media_group_id:
-            send_func = message.answer_photo
+        if new_answer or message.media_group_id:
+            await message.answer_photo(
+                photo=photo,
+                caption=text,
+                parse_mode=parse_mode,
+                reply_markup=keyboard, 
+                reply_parameters=None
+            )
         elif message.photo:
             media = InputMediaPhoto(
-                media=path,
+                media=photo,
                 caption=text,
                 parse_mode=parse_mode
             )
             await message.edit_media(
-                media=media, 
+                media=media,
                 reply_markup=keyboard
             )
-            return
         else:
             try:
                 await message.delete()
             except TelegramBadRequest:
                 logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
-            send_func = message.answer_photo
-
-        await send_func(
-            photo=path,
-            caption=text,
-            reply_markup=keyboard, 
-            parse_mode=parse_mode
-        )
+            await message.answer_photo(
+                photo=photo,
+                caption=text,
+                parse_mode=parse_mode,
+                reply_markup=keyboard, 
+                reply_parameters=None
+            )
     except TelegramBadRequest as e:
         if e.message != "Message is not modified":
             logger.error(f"Ошибка при отправке фото: {e}")
