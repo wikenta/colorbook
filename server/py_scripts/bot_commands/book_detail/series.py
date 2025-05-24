@@ -3,7 +3,8 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from db_request.publisher import get_publisher_by_id
-from db_request.series import get_series_by_id
+from db_request.series import get_series_by_id, get_child_series, get_all_parent_series
+from db_request.volume import get_books_by_series
 from ..sending import send_message
 
 router = Router()
@@ -57,8 +58,51 @@ async def handle_series(callback_query: CallbackQuery):
         text=publisher['name_ru'], 
         callback_data=PATH_PUBLISHER + str(publisher_id))
     message += f"Издатель: {publisher['name_ru']}\n"
+
+    #родительские серии
+    buttons_parent_series = []
+    if series['parent_series_id']:
+        parent_series = await get_all_parent_series(series_id)
+        if parent_series:
+            message += "Находится в серии:\n"
+            for parent in parent_series:
+                message += f" ∙   {parent['name_ru']}\n"
+                buttons_parent_series.append(
+                    InlineKeyboardButton(
+                        text=parent['name_ru'], 
+                        callback_data=PATH_SERIES + str(parent['id']))
+                )
+
+    #книги в серии
+    buttons_books = []
+    books = await get_books_by_series(series_id)
+    if books:
+        message += "Книги в серии:\n"
+        for book in books:
+            message += f" ∙   {book['name_ru']}\n"
+            buttons_books.append(
+                InlineKeyboardButton(
+                    text=book['name_ru'], 
+                    callback_data=PATH_BOOK + str(book['id']))
+            )
+
+    #дочерние серии
+    buttons_child_series = []
+    child_series = await get_child_series(series_id)
+    if child_series:
+        message += "Содержит серии:\n"
+        for child in child_series:
+            message += f" ∙   {child['name_ru']}\n"
+            buttons_child_series.append(
+                InlineKeyboardButton(
+                    text=child['name_ru'], 
+                    callback_data=PATH_SERIES + str(child['id']))
+            )
+
     await send_message(
         message=callback_query.message,
         text=message,
-        buttons=[button_publisher, BUTTON_MAIN],
+        buttons=(
+            buttons_books + buttons_child_series + buttons_parent_series + [button_publisher, BUTTON_MAIN]
+        )[:9]
     )
