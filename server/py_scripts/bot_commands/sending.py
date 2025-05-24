@@ -3,15 +3,19 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import FSInputFile, InputMediaPhoto
 from aiogram.exceptions import TelegramBadRequest
 from typing import Optional
-import logging, os
+from config.secret import BOT_ID
+import logging, os, validators
 logger = logging.getLogger("colorbook")
+
+def message_from_me(message: Message) -> bool:
+    return message.from_user is not None and message.from_user.id == BOT_ID
 
 async def send_message(
         message: Message,
         text: str,
         buttons: Optional[list[InlineKeyboardButton]] = None,
         parse_mode: str = "HTML",
-        new_answer: bool = False
+        save_old: bool = False
 ):
     """
     Сообщение без фото
@@ -23,74 +27,71 @@ async def send_message(
                 [b] for b in buttons]
             )
 
-        if new_answer or message.media_group_id:
-            await message.answer(text, parse_mode=parse_mode, reply_markup=keyboard, reply_parameters=None)
-        elif message.photo:
-            try:
-                await message.delete()
-            except TelegramBadRequest:
-                logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
-            await message.answer(text, parse_mode=parse_mode, reply_markup=keyboard, reply_parameters=None)
+        if save_old or not message_from_me(message) or message.media_group_id or message.photo:
+            if not save_old:
+                try:
+                    await message.delete()
+                except TelegramBadRequest:
+                    logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
+            await message.answer(text, parse_mode=parse_mode, reply_markup=keyboard)
         else:
             await message.edit_text(text, parse_mode=parse_mode, reply_markup=keyboard)
-
     except TelegramBadRequest as e:
         if e.message != "Message is not modified":
             logger.error(f"Ошибка при отправке сообщения: {e}")
 
+def get_photo(path: str) -> FSInputFile | str | None:
+    if validators.url(path):
+        return path
+    elif os.path.isfile(path):
+        return FSInputFile(path)
+    elif os.path.isfile('/colorbook/files/'+path):
+        return FSInputFile('/colorbook/files/'+path)
+    else:
+        logger.error(f"Файл не найден: {path}")
+        return None
+
 async def send_photo(
         message: Message,
-        path: str, # локальный путь
+        path: str, # локальный путь или URL
         text: str,
         buttons: Optional[list[InlineKeyboardButton]] = None,
         parse_mode: str = "HTML",
-        new_answer: bool = False
+        save_old: bool = False
 ):
     """
     Сообщение с фото
     """
     try:
-        if os.path.isfile(path):
-            photo = FSInputFile(path)
-        else:
-            logger.error(f"Файл не найден: {path}")
-            return
+        if not save_old:
+            try:
+                await message.delete()
+            except TelegramBadRequest:
+                logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
 
         keyboard = None
         if buttons:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [b] for b in buttons]
             )
-
-        if new_answer or message.media_group_id:
+        
+        photo = get_photo(path)
+        if photo:
             await message.answer_photo(
                 photo=photo,
-                caption=text,
-                parse_mode=parse_mode,
-                reply_markup=keyboard, 
-                reply_parameters=None
-            )
-        elif message.photo:
-            media = InputMediaPhoto(
-                media=photo,
                 caption=text,
                 parse_mode=parse_mode
             )
-            await message.edit_media(
-                media=media,
-                reply_markup=keyboard
+            await message.answer(
+                text="Выберите действие:",
+                reply_markup=keyboard,
+                parse_mode=parse_mode
             )
         else:
-            try:
-                await message.delete()
-            except TelegramBadRequest:
-                logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
-            await message.answer_photo(
-                photo=photo,
-                caption=text,
-                parse_mode=parse_mode,
-                reply_markup=keyboard, 
-                reply_parameters=None
+            await message.answer(
+                text=text + "\n\nК сожалению, не удалось загрузить фото",
+                reply_markup=keyboard,
+                parse_mode=parse_mode
             )
     except TelegramBadRequest as e:
         if e.message != "Message is not modified":
@@ -100,36 +101,56 @@ async def send_group_photo(
         message: Message,
         path: list[str], # локальные пути
         text: str,
+        buttons: Optional[list[InlineKeyboardButton]] = None,
         parse_mode: str = "HTML",
-        new_answer: bool = False
+        save_old: bool = False
 ):
     """
     Сообщение с несколькими фото
     """
     try:
-        missing_files = [photo for photo in path if not os.path.isfile(photo)]
-        if missing_files:
-            logger.error(f"Файлы не найдены: {missing_files}")
-            if len(missing_files) == len(path):
-                return
-        valid_files = [photo for photo in path if os.path.isfile(photo)]
-        if not valid_files:
-            logger.error("Нет доступных файлов для отправки")
-            return
-        
-        media = [
-            InputMediaPhoto(media=FSInputFile(photo))
-            for photo in valid_files
-        ]
-        media[0].caption = text
-        media[0].parse_mode = parse_mode
-
-        if not new_answer and not message.media_group_id:
+        if not save_old:
             try:
                 await message.delete()
             except TelegramBadRequest:
                 logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
-        await message.answer_media_group(media=media)
+
+        keyboard = None
+        if buttons:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [b] for b in buttons]
+            )
+
+        photos = [get_photo(p) for p in path]
+        
+        missing_photos = [p for p in photos if p is None] 
+        if missing_photos:
+            logger.error(f"Фото не найдены: {missing_photos}")
+            if len(missing_photos) == len(path):
+                return
+        
+        photos = [p for p in photos if p is not None]
+        if photos:
+            media = [
+                InputMediaPhoto(media=photo)
+                for photo in photos
+            ]
+            media[0].caption = text
+            media[0].parse_mode = parse_mode
+            await message.answer_media_group(media=media)
+
+            await message.answer(
+                text="Выберите действие:",
+                reply_markup=keyboard,
+                parse_mode=parse_mode
+            )
+        else:
+            logger.error("Нет доступных фото для отправки")
+            await message.answer(
+                text=text + "\n\nК сожалению, не удалось загрузить фото",
+                reply_markup=keyboard,
+                parse_mode=parse_mode
+            )
     except TelegramBadRequest as e:
         if e.message != "Message is not modified":
             logger.error(f"Ошибка при отправке группы фото: {e}")

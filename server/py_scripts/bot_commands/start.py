@@ -5,7 +5,6 @@ router = Router()
 
 @router.message(F.text == "/start")
 async def cmd_start(message: Message):
-    await message.delete()
     text = (
         "Приветствую!\n"
         "\n"
@@ -23,4 +22,4 @@ async def cmd_start(message: Message):
         "Это только ближайшие планы, в целом я крайне амбициозна. "
         "Но заполнение требует много времени, мне будет нужна помощь энтузиастов"
     )
-    await send_message(message, text, new_answer=True)
+    await send_message(message, text)

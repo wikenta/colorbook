@@ -18,10 +18,10 @@ echo 🛠️ Устанавливаю зависимости...
 if exist requirements.txt (
     venv\Scripts\pip.exe install -r requirements.txt
 ) else (
-    venv\Scripts\pip.exe install pdf2image pymupdf sqlalchemy psycopg2-binary asyncpg python-telegram-bot aiogram
-    venv\Scripts\pip.exe freeze > requirements.txt
-    echo 🎯 requirements.txt создан
+    venv\Scripts\pip.exe install pdf2image pymupdf sqlalchemy psycopg2-binary asyncpg python-telegram-bot aiogram aiohttp cloudinary validators
 )
+venv\Scripts\pip.exe freeze > requirements.txt
+echo 🎯 requirements.txt обновлён
 
 :: 3. Подсказка по активации
 echo.

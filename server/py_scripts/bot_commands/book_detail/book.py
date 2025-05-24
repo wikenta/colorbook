@@ -74,9 +74,10 @@ async def handle_book(callback_query: CallbackQuery):
         )
         return
     
+    path = covers[0]['file_path']
     await send_photo(
         message=callback_query.message,
-        path='/colorbook/files/'+covers[0]['file_path'],
+        path=path,
         text=message,
         buttons=[button_publisher, BUTTON_MAIN]
     )

@@ -4,16 +4,22 @@ from db_request.publisher import get_publishers
 from db_request.series import get_root_series_by_publisher, get_child_series
 from db_request.volume import get_books_by_series
 from .sending import send_message
+import logging
+logger = logging.getLogger("colorbook")
 
 router = Router()
 
 # Отображение списка всех книг
 @router.message(F.text == "/books")
 async def send_books(message: Message):
-    await message.delete()
+    try:
+        await message.delete()
+    except Exception as e:
+        logger.error(f"Ошибка при удалении сообщения: {e}")
+
     publishers = await get_publishers()
     if not publishers:
-        await send_message(message, "Издатели не найдены.", new_answer=True)
+        await send_message(message, "Издатели не найдены.")
         return
     
     for publisher in publishers:
@@ -25,7 +31,7 @@ async def send_books(message: Message):
         for s in series:
             response += f"\n<b>{s['name_ru']}</b>\n"
             response += await get_message_child_series_recursive(s['id'])
-        await send_message(message, response, new_answer=True)
+        await send_message(message, response, save_old = True)
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
     """
