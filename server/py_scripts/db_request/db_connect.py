@@ -1,5 +1,5 @@
 import asyncpg
-from secret import DB_USER, DB_PASSWORD, DB_NAME, DB_HOST
+from config.secret import DB_USER, DB_PASSWORD, DB_NAME, DB_HOST
 
 # Функция для подключения к базе данных
 async def get_db_connection():

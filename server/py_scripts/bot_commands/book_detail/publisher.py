@@ -25,8 +25,7 @@ BUTTON_MAIN = InlineKeyboardButton(
 # Точка входа
 @router.message(F.text == PATH_ENTRY_POINT)
 async def send_book_detail(message: Message):
-    await message.delete()
-    await show_publishers(message, first_message=True)
+    await show_publishers(message)
 
 # когда пользователь нажимает "вернуться к издателям", показываем список издателей
 @router.callback_query(F.data == PATH_MAIN)
@@ -34,13 +33,12 @@ async def back_to_publishers(callback_query: CallbackQuery):
     await show_publishers(callback_query.message)
 
 # показать первое сообщение: список издателей
-async def show_publishers(message: Message, first_message: bool = False):
+async def show_publishers(message: Message):
     publishers = await get_publishers()
     if not publishers:
         await send_message( 
             message=message, 
-            text="Издатели не найдены.",
-            new_answer=first_message)
+            text="Издатели не найдены.")
         return
     
     response = "Выберите издателя:\n\n"
@@ -56,8 +54,7 @@ async def show_publishers(message: Message, first_message: bool = False):
     await send_message(
         message=message,
         text=response,
-        buttons=buttons,
-        new_answer=first_message
+        buttons=buttons
     )
 
 @router.callback_query(F.data.startswith(PATH_PUBLISHER))

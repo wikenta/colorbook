@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from bot_commands.commands import register_routers, set_commands
-from secret import API_TOKEN
+from config.secret import API_TOKEN
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
