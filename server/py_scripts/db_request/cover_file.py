@@ -11,6 +11,6 @@ async def get_cover_files(volume_id: str) -> List[Record]:
     SELECT c.id, c.file_path
     FROM files.cover_file c WHERE c.volume_id = $1
     """
-    cover_files = await conn.fetch(query)
+    cover_files = await conn.fetch(query, volume_id)
     await conn.close()
     return cover_files
