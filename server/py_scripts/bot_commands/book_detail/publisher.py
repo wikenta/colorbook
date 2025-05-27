@@ -78,7 +78,7 @@ async def handle_publisher(callback_query: CallbackQuery):
         )
         return
     
-    message = f"Издатель: {publisher['name_ru']}\n\n"
+    message = f"<b>Издатель:</b> {publisher['name_ru']}\n"
     series = await get_root_series_by_publisher(publisher_id)
     books = await get_books_by_publisher_without_series(publisher_id)
     if not series and not books:
@@ -90,15 +90,13 @@ async def handle_publisher(callback_query: CallbackQuery):
         return
     
     if series:
-        message += "Серии:\n"
+        message += "\n<b>Серии:</b>\n"
         for s in series:
             message += f" ∙   {s['name_ru']}\n"
-        message += "\n"
     if books:
-        message += "Книги без серии:\n"
+        message += "\n<b>Книги без серии:</b>\n"
         for book in books:
             message += f" ∙   {book['name_ru']}\n"
-        message += "\n"
 
     buttons_series = [
         InlineKeyboardButton(
