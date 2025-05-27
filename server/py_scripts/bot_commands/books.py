@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import Message
 from db_request.publisher import get_publishers
 from db_request.series import get_root_series_by_publisher, get_child_series
-from db_request.volume import get_books_by_series
+from db_request.volume import get_books_by_series, get_books_by_publisher_without_series
 from .sending import send_message
 import logging
 logger = logging.getLogger("colorbook")
@@ -24,13 +24,21 @@ async def send_books(message: Message):
     
     for publisher in publishers:
         series = await get_root_series_by_publisher(publisher['id'])
-        if not series:
+        books = await get_books_by_publisher_without_series(publisher['id'])
+        if not series and not books:
             continue
 
         response = f"Издатель: {publisher['name_ru']}\n"
         for s in series:
             response += f"\n<b>{s['name_ru']}</b>\n"
             response += await get_message_child_series_recursive(s['id'])
+        if books:
+            response += "\n<b>Книги без серии:</b>\n"
+            for book in books:
+                response += f" ∙   {book['name_ru']}"
+                if book['release_year']:
+                    response += f" ({book['release_year']})"
+                response += "\n"
         await send_message(message, response, save_old = True)
 
 async def get_message_child_series_recursive (series_id: str, depth: int = 0) -> str:
