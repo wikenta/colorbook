@@ -1,6 +1,6 @@
 from asyncpg import Record
 from typing import Optional, List
-from db_request.db_connect import get_db_connection
+from ._db_connect import get_db_connection
 
 async def get_all_books() -> List[Record]:
     """

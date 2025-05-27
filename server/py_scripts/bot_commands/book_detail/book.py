@@ -1,13 +1,12 @@
 import uuid, logging
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import FSInputFile
+from aiogram.types import InlineKeyboardButton
 from db_request.publisher import get_publisher_by_id
 from db_request.series import get_series_by_id, get_all_parent_series
 from db_request.volume import get_book_by_id
 from db_request.cover_file import get_cover_files
-from ..sending import send_message, send_photo
+from tools.sending import send_message, send_photo
 
 router = Router()
 logger = logging.getLogger("colorbook")
@@ -95,12 +94,12 @@ async def handle_book(callback_query: CallbackQuery):
             message=callback_query.message,
             path=path,
             text=message,
-            buttons=(buttons_series + [button_publisher, BUTTON_MAIN])[:9]
+            buttons=(buttons_series + [button_publisher, BUTTON_MAIN])
         )
     else:
         logger.error(f"Обложка не найдена: {book_id}")
         await send_message(
             message=callback_query.message,
             text=message,
-            buttons=(buttons_series + [button_publisher, BUTTON_MAIN])[:9]
+            buttons=(buttons_series + [button_publisher, BUTTON_MAIN])
         )

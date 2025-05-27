@@ -1,6 +1,6 @@
 from aiogram import F, Router
 from aiogram.types import Message
-from .sending import send_message
+from tools.sending import send_message
 router = Router()
 
 @router.message(F.text == "/start")

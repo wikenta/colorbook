@@ -1,9 +1,10 @@
 from aiogram.types import Message
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton
 from aiogram.types import FSInputFile, InputMediaPhoto
 from aiogram.exceptions import TelegramBadRequest
 from typing import Optional
 from config.secret import BOT_ID
+from .keyboard import get_keyboard
 import logging, os, validators
 logger = logging.getLogger("colorbook")
 
@@ -21,11 +22,7 @@ async def send_message(
     Сообщение без фото
     """
     try:
-        keyboard = None
-        if buttons:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                [b] for b in buttons]
-            )
+        keyboard = get_keyboard(buttons)
 
         if save_old or not message_from_me(message) or message.media_group_id or message.photo:
             if not save_old:
@@ -69,11 +66,7 @@ async def send_photo(
             except TelegramBadRequest:
                 logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
 
-        keyboard = None
-        if buttons:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                [b] for b in buttons]
-            )
+        keyboard = get_keyboard(buttons)
         
         photo = get_photo(path)
         if photo:
@@ -115,11 +108,7 @@ async def send_group_photo(
             except TelegramBadRequest:
                 logger.error(f"Ошибка при удалении сообщения: {message.message_id}")
 
-        keyboard = None
-        if buttons:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                [b] for b in buttons]
-            )
+        keyboard = get_keyboard(buttons)
 
         photos = [get_photo(p) for p in path]
         
