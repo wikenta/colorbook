@@ -46,7 +46,10 @@ async def handle_book(callback_query: CallbackQuery):
         )
         return
     
-    message = f"<b>Книга:</b> {book['full_name_ru']}\n\n"
+    message = f"<b>Книга:</b> {book['full_name_ru']}\n"
+    if book['name_ru'] != book['name_en']:
+        message += f"({book['name_en']})\n"
+    message += "\n"
     publisher_id = book['publisher_id']
     publisher = await get_publisher_by_id(publisher_id)
     if not publisher:
@@ -63,6 +66,10 @@ async def handle_book(callback_query: CallbackQuery):
         text=publisher['name_ru'], 
         callback_data=PATH_PUBLISHER + str(publisher_id))
     
+    # год издания
+    if book['release_year']:
+        message += f"<b>Год издания:</b> {book['release_year']}\n"
+    
     # серия может быть NULL
     buttons_series = []
     if book['series_id']:
@@ -71,17 +78,16 @@ async def handle_book(callback_query: CallbackQuery):
             message += f"<b>Серия:</b> {series['full_name_ru']}\n"
             buttons_series.append(
                 InlineKeyboardButton(
-                    text=series['full_name_ru'], 
+                    text=series['name_ru'], 
                     callback_data=PATH_SERIES + str(series['id']))
             )
             if series['parent_series_id']:
                 parent_series = await get_all_parent_series(series['id'])
                 if parent_series:
                     for parent in parent_series:
-                        message += f" ∙   {parent['full_name_ru']}\n"
                         buttons_series.append(
                             InlineKeyboardButton(
-                                text=parent['full_name_ru'], 
+                                text=parent['name_ru'], 
                                 callback_data=PATH_SERIES + str(parent['id']))
                         )
         else:
