@@ -15,7 +15,7 @@ if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
 else
     echo "🆕 requirements.txt не найден – устанавливаем базовые пакеты..."
-    pip install asyncpg aiogram
+    pip install asyncpg aiogram cloudinary
 
     echo "📝 Сохраняем зависимости в requirements.txt..."
     pip freeze > requirements.txt
