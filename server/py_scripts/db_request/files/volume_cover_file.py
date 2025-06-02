@@ -1,27 +1,28 @@
 from asyncpg import Record
 from typing import Optional, List
 from .._db_connect import get_db_connection
+TABLE_NAME = "files.volume_cover_file"
 
-async def get_cover_files(volume_id: str) -> List[Record]:
+async def get_volume_cover_files(volume_id: str) -> List[Record]:
     """
     Все файлы обложек тома: file_path
     """
     conn = await get_db_connection()
-    query = """
+    query = f"""
     SELECT c.id, c.file_path
-    FROM files.cover_file c WHERE c.volume_id = $1
+    FROM {TABLE_NAME} c WHERE c.volume_id = $1
     """
     cover_files = await conn.fetch(query, volume_id)
     await conn.close()
     return cover_files
 
-async def update_cover_file_path(cover_id: str, new_file_path: str) -> Optional[Record]:
+async def update_volume_cover_file_path(cover_id: str, new_file_path: str) -> Optional[Record]:
     """
     Обновить путь к файлу обложки по ID
     """
     conn = await get_db_connection()
-    query = """
-    UPDATE files.cover_file
+    query = f"""
+    UPDATE {TABLE_NAME}
     SET file_path = $1
     WHERE id = $2
     RETURNING id, file_path
