@@ -2,10 +2,10 @@ import uuid, logging
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.types import InlineKeyboardButton
-from db_request.publisher import get_publisher_by_id
-from db_request.series import get_series_by_id, get_all_parent_series
-from db_request.volume import get_book_by_id
-from db_request.cover_file import get_cover_files
+from db_request.coloring.publisher import get_publisher_by_id
+from db_request.coloring.series import get_series_by_id, get_all_parent_series
+from db_request.coloring.volume import get_book_by_id
+from db_request.files.volume_cover_file import get_volume_cover_files
 from tools.sending import send_message, send_photo
 
 router = Router()
@@ -93,7 +93,7 @@ async def handle_book(callback_query: CallbackQuery):
         else:
             logger.error(f"Серия не найдена: {book['series_id']}")
 
-    covers = await get_cover_files(book_id)
+    covers = await get_volume_cover_files(book_id)
     if covers:
         path = covers[0]['file_path']
         await send_photo(
