@@ -2,9 +2,9 @@ import uuid, logging
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.types import InlineKeyboardButton
-from db_request.publisher import get_publisher_by_id
-from db_request.series import get_series_by_id, get_child_series, get_all_parent_series
-from db_request.volume import get_books_by_series
+from db_request.coloring.publisher import get_publisher_by_id
+from db_request.coloring.series import get_series_by_id, get_child_series, get_all_parent_series
+from db_request.coloring.volume import get_books_by_series
 from tools.sending import send_message
 
 router = Router()

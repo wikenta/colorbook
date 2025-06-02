@@ -2,9 +2,9 @@
 import cloudinary
 import cloudinary.api
 from config.secret import CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
-from db_request.publisher import get_publishers
-from db_request.series import get_root_series_by_publisher, get_child_series
-from db_request.volume import get_books_by_publisher_without_series, get_books_by_series
+from db_request.coloring.publisher import get_publishers
+from db_request.coloring.series import get_root_series_by_publisher, get_child_series
+from db_request.coloring.volume import get_books_by_publisher_without_series, get_books_by_series
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
