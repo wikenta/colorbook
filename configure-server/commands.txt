@@ -17,7 +17,15 @@ sudo journalctl --vacuum-time=1s
 sudo chown -R deployer:deployer /colorbook/
 sudo chmod -R g+rwX /colorbook
 sudo chmod g+s /colorbook
-chmod +x setup.sh
 
 sudo visudo -c
 sudo -l -U deployer
+
+
+
+
+Сделать файл исполняемым (после копирования на сервер скриптов .sh)
+chmod +x file.sh
+
+Запустить .sh
+./file.sh
