@@ -21,3 +21,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "services/colorbook-bot/*"  # from
           target: "/opt/colorbook-dev/app/"  # to
+          strip_components: 2
