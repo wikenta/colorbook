@@ -1,0 +1,8 @@
+pdf2image
+pymupdf
+sqlalchemy
+asyncpg
+aiogram
+aiohttp
+cloudinary
+validators
