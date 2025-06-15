@@ -1,6 +1,6 @@
-from pdf_process.dpi import get_pdf_dpi, get_standart_dpi
-from pdf_process.converter import pdf_to_images
-from pdf_process.rename_pages import rename_files
+from scripts.dpi import get_pdf_dpi, get_standart_dpi
+from scripts.converter import pdf_to_images
+from scripts.rename_pages import rename_files
 import os
 
 folder = "pdf/parse"
