@@ -1,28 +1,20 @@
-source venv/bin/activate
-
+работа со службами
 sudo systemctl stop coloring-bot.service
 sudo systemctl start coloring-bot.service
 sudo systemctl restart coloring-bot.service
 sudo systemctl status coloring-bot.service
 
-sudo systemctl restart coloring-bot-dev.service
-sudo systemctl status coloring-bot-dev.service
-
+просмотр логов
 cat /colorbook/src/bot.log
-
 journalctl -u coloring-bot.service -n 50 --no-pager
 journalctl -u coloring-bot.service -f
+
+очистка логов
 sudo journalctl --vacuum-time=1s
 
-sudo chown -R deployer:deployer /colorbook/
-sudo chmod -R g+rwX /colorbook
-sudo chmod g+s /colorbook
-
+настройка прав пользователей
 sudo visudo -c
 sudo -l -U deployer
-
-
-
 
 Сделать файл исполняемым (после копирования на сервер скриптов .sh)
 chmod +x file.sh

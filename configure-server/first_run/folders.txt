@@ -1,0 +1,17 @@
+sudo mkdir /opt/colorbook
+
+Сделать команды из group.txt, чтобы были права доступа
+
+mkdir main
+mkdir develop
+mkdir admin
+
+у каждой службы есть файл лога
+
+у всех общие есть venv и requirements.txt
+для них же скрипты restart.sh и setup.sh
+
+files общая
+
+после перемещения файлов повторить права
+sudo chmod -R 775 /opt/colorbook

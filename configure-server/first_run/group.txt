@@ -1,0 +1,14 @@
+Создание группы пользователей
+(группа будет основной, оба пользователя равные)
+sudo groupadd colorbook
+sudo usermod -g colorbook wikenta
+sudo usermod -g colorbook deployer
+(перелогиниться)
+
+Права каталога
+sudo chown -R wikenta:colorbook /opt/colorbook
+sudo chmod -R 775 /opt/colorbook
+sudo find /opt/colorbook -type d -exec chmod g+s {} +
+
+Чтобы у группы были те же права, добавить в ~/.profile и ~/.bashrc
+umask 002
