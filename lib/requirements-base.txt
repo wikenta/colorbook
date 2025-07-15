@@ -6,3 +6,4 @@ aiogram
 aiohttp
 cloudinary
 validators
+python-dotenv
