@@ -1,11 +1,12 @@
+import logging, os, validators
 from aiogram.types import Message
 from aiogram.types import InlineKeyboardButton
 from aiogram.types import FSInputFile, InputMediaPhoto
 from aiogram.exceptions import TelegramBadRequest
 from typing import Optional
-from config.secret import BOT_ID
 from .keyboard import get_keyboard
-import logging, os, validators
+
+BOT_ID = os.getenv('TELEGRAM_BOT_ID')
 logger = logging.getLogger("colorbook")
 
 def message_from_me(message: Message) -> bool:

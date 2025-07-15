@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-import logging
-import signal
-import asyncio
+import asyncio, logging, os, signal
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
+from dotenv import load_dotenv
 from bot_commands._commands import register_routers, set_commands
-from config.secret import API_TOKEN
+
+# Загрузка переменных окружения
+env = os.getenv("ENV", "develop")
+load_dotenv(f"/config/secret.{env}.env")
+load_dotenv("/config/db.env")
+load_dotenv("/config/cloudinary.env")
+API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)

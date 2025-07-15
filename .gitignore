@@ -9,6 +9,6 @@ pdf/
 
 # Исключить пароли
 passwords.txt
-secret.py
+*.env
 
 backup_data.bat
