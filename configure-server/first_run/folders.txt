@@ -2,16 +2,26 @@ sudo mkdir /opt/colorbook
 
 Сделать команды из group.txt, чтобы были права доступа
 
-mkdir main
-mkdir develop
-mkdir admin
-
-у каждой службы есть файл лога
-
-у всех общие есть venv и requirements.txt
-для них же скрипты restart.sh и setup.sh
-
-files общая
+mkdir ...
 
 после перемещения файлов повторить права
 sudo chmod -R 775 /opt/colorbook
+
+/opt/colorbook
+    /main
+    /develop
+    /admin
+    /config
+        db.env
+        cloudinary.env
+        telegram.main.env
+        telegram.develop.env
+        telegram.admin.env
+    /lib
+        /venv
+        activate.sh
+        restore.sh
+        reset.sh
+        requirements.txt
+        requirements-base.txt
+    /logs
