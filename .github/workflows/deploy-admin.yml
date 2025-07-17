@@ -1,0 +1,33 @@
+name: Deploy (admin)
+
+on:
+  push:
+    branches:
+      - admin
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Стартуем на Ubuntu runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # Клонируем весь репозиторий в runner
+
+      - name: Copy files to the server
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -vzrO --delete
+          path: services/admin-bot/
+          remote_path: /opt/colorbook/admin/
+          remote_host: ${{ secrets.SERVER_IP }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Restart service
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo systemctl restart colorbook-admin.service
