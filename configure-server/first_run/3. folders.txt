@@ -7,6 +7,12 @@ mkdir ...
 после перемещения файлов повторить права
 sudo chmod -R 775 /opt/colorbook
 
+Сделать файл исполняемым (после копирования на сервер скриптов .sh)
+chmod +x file.sh
+
+Запустить .sh
+./file.sh
+
 /opt/colorbook
     /main
     /develop
@@ -25,3 +31,4 @@ sudo chmod -R 775 /opt/colorbook
         requirements.txt
         requirements-base.txt
     /logs
+        (пока не пишется в файл)

@@ -1,0 +1,32 @@
+После копирования надо повторять владельцев:
+sudo chown -R wikenta:colorbook /opt/colorbook
+
+1. Файлы служб лежат в /etc/systemd/system/
+Сохраняю там файлы из вложенного каталога
+
+2. Обновить список служб, включить автозапуск
+sudo systemctl daemon-reload
+sudo systemctl enable colorbook-main.service
+
+3. Работа со службами
+sudo systemctl stop colorbook-main.service
+sudo systemctl start colorbook-main.service
+sudo systemctl restart colorbook-main.service
+sudo systemctl status colorbook-main.service
+
+4. Обновление службы
+sudo systemctl stop colorbook-main.service
+sudo systemctl disable colorbook-main.service
+(изменить или удалить файл)
+sudo rm /etc/systemd/system/colorbook-main.service
+sudo systemctl daemon-reload
+
+5. Логи
+journalctl -u colorbook-main.service
+-f                  читать непрерывно
+-n 50               последние Х строк
+--no-pager          вывести целиком, без пролистывания
+-r                  в обратном порядке
+
+Очистить логи (только одной службы нельзя)
+sudo journalctl --vacuum-time=1s

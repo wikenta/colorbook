@@ -1,0 +1,16 @@
+[Unit]
+Description=Colorbook Bot Main
+After=network.target
+
+[Service]
+Type=simple
+User=deployer
+WorkingDirectory=/opt/colorbook/main
+ExecStart=/opt/colorbook/lib/venv/bin/python3 /opt/colorbook/main/main.py
+Restart=always
+RestartSec=5
+Environment=ENV=main
+EnvironmentFile=-/opt/colorbook/config/.env
+
+[Install]
+WantedBy=multi-user.target
