@@ -1,6 +1,6 @@
 from asyncpg import Record
 from typing import Optional, List
-from .._db_connect import get_db_connection
+from db_request._db_connect import get_db_connection
 TABLE_NAME = "files.volume_promo_file"
 
 async def get_volume_promo_files(volume_id: str) -> List[Record]:

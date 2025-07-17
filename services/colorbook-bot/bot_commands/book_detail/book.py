@@ -9,7 +9,7 @@ from db_request.files.volume_cover_file import get_volume_cover_files
 from tools.sending import send_message, send_photo
 
 router = Router()
-logger = logging.getLogger("colorbook")
+logger = logging.getLogger(__name__)
 
 # Пути, используемые в этом файле:
 PATH_ENTRY_POINT = "/book_detail"

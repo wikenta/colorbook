@@ -5,9 +5,10 @@ from aiogram.types import FSInputFile, InputMediaPhoto
 from aiogram.exceptions import TelegramBadRequest
 from typing import Optional
 from .keyboard import get_keyboard
+from tools.loading import TELEGRAM_BOT_ID
 
-BOT_ID = os.getenv('TELEGRAM_BOT_ID')
-logger = logging.getLogger("colorbook")
+BOT_ID = os.getenv(TELEGRAM_BOT_ID)
+logger = logging.getLogger(__name__)
 
 def message_from_me(message: Message) -> bool:
     return message.from_user is not None and message.from_user.id == BOT_ID

@@ -4,23 +4,20 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
-from dotenv import load_dotenv
 from bot_commands._commands import register_routers, set_commands
-
-# Загрузка переменных окружения
-env = os.getenv("ENV", "develop")
-load_dotenv(f"/config/secret.{env}.env")
-load_dotenv("/config/db.env")
-load_dotenv("/config/cloudinary.env")
-API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
+from tools.loading import load_environment, TELEGRAM_API_TOKEN
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.info("Let's go!")
+
+# Загрузка переменных окружения
+load_environment() 
 
 # Объекты бота и диспетчера
 default_properties = DefaultBotProperties(parse_mode=ParseMode.HTML)
-bot = Bot(token=API_TOKEN, default=default_properties)
+bot = Bot(token=os.getenv(TELEGRAM_API_TOKEN), default=default_properties)
 
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)

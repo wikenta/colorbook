@@ -8,7 +8,7 @@ from db_request.coloring.volume import get_books_by_publisher_without_series
 from tools.sending import send_message
 
 router = Router()
-logger = logging.getLogger("colorbook")
+logger = logging.getLogger(__name__)
 
 # Пути, используемые в этом файле:
 PATH_ENTRY_POINT = "/book_detail"

@@ -5,7 +5,7 @@ from db_request.coloring.series import get_root_series_by_publisher, get_child_s
 from db_request.coloring.volume import get_books_by_series, get_books_by_publisher_without_series
 from tools.sending import send_message
 import logging
-logger = logging.getLogger("colorbook")
+logger = logging.getLogger(__name__)
 
 router = Router()
 
