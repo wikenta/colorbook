@@ -1,0 +1,15 @@
+Не боись. Давай по-порядку
+
+1. Проверить, откуда запускается systemctl
+which systemctl
+
+2. Открыть/создать файл
+sudo visudo -f /etc/sudoers.d/deployer
+
+3. Заполнить
+deployer ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart colorbook-main.service, /usr/bin/systemctl restart colorbook-develop.service, /usr/bin/systemctl restart colorbook-admin.service
+
+4. Выходим, сохраняем
+
+5. Проверяем
+sudo -l -U deployer

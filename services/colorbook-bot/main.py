@@ -10,7 +10,7 @@ from tools.loading import load_environment, TELEGRAM_API_TOKEN
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.info("Let's go!")
+logger.info("Let's go! Еху!")
 
 # Загрузка переменных окружения
 load_environment() 

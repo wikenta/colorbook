@@ -1,3 +1,0 @@
-настройка прав пользователей
-sudo visudo -c
-sudo -l -U deployer
