@@ -10,6 +10,7 @@ def register_routers(dp: Dispatcher):
 async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Приветствие"),
+        BotCommand(command="load_image", description="Загрузка изображения"),
         BotCommand(command="test_buttons", description="Тест кнопок")
     ]
     await bot.set_my_commands(commands)
