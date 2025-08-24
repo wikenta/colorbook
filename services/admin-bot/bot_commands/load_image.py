@@ -1,17 +1,28 @@
 from aiogram import F, Router
 from aiogram.types import Message
 from tools.sending import send_message
-from tools.loading import ADMIN_TG_ID
+from tools.loading import ADMIN_TG_ID, TELEGRAM_BOT_ID, TELEGRAM_BOT_LOGIN
 import os, logging
 
 router = Router()
 ADMIN_ID = os.getenv(ADMIN_TG_ID)
+TG_BOT_ID = os.getenv(TELEGRAM_BOT_ID)
+TG_BOT_LOGIN = os.getenv(TELEGRAM_BOT_LOGIN)
 logger = logging.getLogger(__name__)
 if ADMIN_ID is not None:
     ADMIN_ID = int(ADMIN_ID)
     logger.info(f"Admin ID loaded: {ADMIN_ID}")
 else:
     logger.error("ADMIN_TG_ID is not set in environment variables.")
+if TG_BOT_ID is not None:
+    TG_BOT_ID = int(TG_BOT_ID)
+    logger.info(f"Bot ID loaded: {TG_BOT_ID}") 
+else:
+    logger.error("TELEGRAM_BOT_ID is not set in environment variables.")
+if TG_BOT_LOGIN is not None:
+    logger.info(f"Bot login loaded: {TG_BOT_LOGIN}")    
+else:
+    logger.error("TELEGRAM_BOT_LOGIN is not set in environment variables.")
 
 #я получаю команду, прошу загрузить изображение
 #в ответ получаю изображение
