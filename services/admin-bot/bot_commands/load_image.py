@@ -1,28 +1,41 @@
 from aiogram import F, Router
 from aiogram.types import Message
 from tools.sending import send_message
-from tools.loading import ADMIN_TG_ID, TELEGRAM_BOT_ID, TELEGRAM_BOT_LOGIN
+from tools.loading import ADMIN_TG_ID, TELEGRAM_BOT_ID, TELEGRAM_BOT_LOGIN, TELEGRAM_API_TOKEN, DB_NAME, CLOUDINARY_CLOUD_NAME
 import os, logging
 
 router = Router()
-ADMIN_ID = os.getenv(ADMIN_TG_ID)
-TG_BOT_ID = os.getenv(TELEGRAM_BOT_ID)
-TG_BOT_LOGIN = os.getenv(TELEGRAM_BOT_LOGIN)
 logger = logging.getLogger(__name__)
+ADMIN_ID = os.getenv(ADMIN_TG_ID)
 if ADMIN_ID is not None:
-    ADMIN_ID = int(ADMIN_ID)
     logger.info(f"Admin ID loaded: {ADMIN_ID}")
 else:
     logger.error("ADMIN_TG_ID is not set in environment variables.")
+TG_BOT_ID = os.getenv(TELEGRAM_BOT_ID)
 if TG_BOT_ID is not None:
-    TG_BOT_ID = int(TG_BOT_ID)
-    logger.info(f"Bot ID loaded: {TG_BOT_ID}") 
+    logger.info(f"Bot ID loaded: {TG_BOT_ID}")
 else:
     logger.error("TELEGRAM_BOT_ID is not set in environment variables.")
+TG_BOT_LOGIN = os.getenv(TELEGRAM_BOT_LOGIN)
 if TG_BOT_LOGIN is not None:
-    logger.info(f"Bot login loaded: {TG_BOT_LOGIN}")    
+    logger.info(f"Bot login loaded: {TG_BOT_LOGIN}")
 else:
     logger.error("TELEGRAM_BOT_LOGIN is not set in environment variables.")
+TG_API_TOKEN = os.getenv(TELEGRAM_API_TOKEN)
+if TG_API_TOKEN is not None:
+    logger.info("API token loaded successfully.")
+else:
+    logger.error("TELEGRAM_API_TOKEN is not set in environment variables.")
+DB_NAME = os.getenv(DB_NAME)
+if DB_NAME is not None:
+    logger.info(f"Database name loaded: {DB_NAME}")
+else:
+    logger.error("DB_NAME is not set in environment variables.")
+CLOUD_NAME = os.getenv(CLOUDINARY_CLOUD_NAME)
+if CLOUD_NAME is not None:
+    logger.info(f"Cloudinary cloud name loaded: {CLOUD_NAME}")
+else:
+    logger.error("CLOUDINARY_CLOUD_NAME is not set in environment variables.")
 
 #я получаю команду, прошу загрузить изображение
 #в ответ получаю изображение
