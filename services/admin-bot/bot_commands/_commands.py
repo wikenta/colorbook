@@ -5,6 +5,7 @@ from .test import router as test_router
 
 def register_routers(dp: Dispatcher):
     dp.include_router(start_router)
+    dp.include_router(test_router)
 
 async def set_commands(bot: Bot):
     commands = [
