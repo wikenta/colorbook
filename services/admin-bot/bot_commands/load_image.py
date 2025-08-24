@@ -11,7 +11,7 @@ ADMIN_ID = os.getenv(ADMIN_TG_ID)
 #в ответ получаю изображение
 @router.message(F.text == "/load_image")
 async def cmd_load_image(message: Message):
-    if message.from_user.id != ADMIN_ID:
+    if str(message.from_user.id) != ADMIN_ID:
         await message.reply(
             "Здесь можно настраивать бот, но вы не администратор."
             "Воспользоваться ботом можно здесь:\n"
