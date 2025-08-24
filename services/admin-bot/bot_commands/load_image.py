@@ -2,10 +2,16 @@ from aiogram import F, Router
 from aiogram.types import Message
 from tools.sending import send_message
 from tools.loading import ADMIN_TG_ID
-import os
+import os, logging
 
 router = Router()
 ADMIN_ID = os.getenv(ADMIN_TG_ID)
+logger = logging.getLogger(__name__)
+if ADMIN_ID is not None:
+    ADMIN_ID = int(ADMIN_ID)
+    logger.info(f"Admin ID loaded: {ADMIN_ID}")
+else:
+    logger.error("ADMIN_TG_ID is not set in environment variables.")
 
 #я получаю команду, прошу загрузить изображение
 #в ответ получаю изображение
@@ -17,19 +23,13 @@ async def cmd_load_image(message: Message):
             "Воспользоваться ботом можно здесь:\n"
             "@color_book_bot"
         )
-        await message.answer(
-            "На всякий случай, вот ваш id: " + str(message.from_user.id) + "\n"
-            "Id администратора начинается с " + ADMIN_ID[0] + " и заканчивается на " + ADMIN_ID[-1] + "\n"
-            "Длина вашего id: " + str(len(str(message.from_user.id))) + "\n"
-            "Длина ADMIN_ID: " + str(len(ADMIN_ID)) + "\n"
-            "А тип данных вашего id: " + str(type(message.from_user.id)) + "\n"
-            "И тип данных ADMIN_ID: " + str(type(ADMIN_ID)) + "\n"
-        )
+        logger.warning(f"Unauthorized access attempt by user ID: {message.from_user.id}, "+
+                       f"admin ID: {ADMIN_ID}")
         return
     text = (
-        "Загрузите изображение\n\n" +
-        "Кстати, ваш id: " + str(message.from_user.id)
+        "Загрузите изображение\n\n"
     )
+    logger.info(f"Admin {ADMIN_ID} initiated image load.")
     await send_message(message, text)
     # await message.reply("Пожалуйста, отправьте изображение, которое хотите загрузить.")
 
