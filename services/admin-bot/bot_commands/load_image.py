@@ -17,6 +17,14 @@ async def cmd_load_image(message: Message):
             "Воспользоваться ботом можно здесь:\n"
             "@color_book_bot"
         )
+        await message.answer(
+            "На всякий случай, вот ваш id: " + str(message.from_user.id) + "\n"
+            "Id администратора начинается с " + ADMIN_ID[0] + " и заканчивается на " + ADMIN_ID[-1] + "\n"
+            "Длина вашего id: " + str(len(str(message.from_user.id))) + "\n"
+            "Длина ADMIN_ID: " + str(len(ADMIN_ID)) + "\n"
+            "А тип данных вашего id: " + str(type(message.from_user.id)) + "\n"
+            "И тип данных ADMIN_ID: " + str(type(ADMIN_ID)) + "\n"
+        )
         return
     text = (
         "Загрузите изображение\n\n" +
