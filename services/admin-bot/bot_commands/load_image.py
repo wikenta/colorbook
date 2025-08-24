@@ -11,12 +11,7 @@ logger = logging.getLogger(__name__)
 #в ответ получаю изображение
 @router.message(F.text == "/load_image")
 async def cmd_load_image(message: Message):
-    ADMIN_ID = os.getenv(ADMIN_TG_ID)
-    if ADMIN_ID is not None:
-        logger.info(f"Admin ID loaded: {ADMIN_ID}")
-    else:
-        logger.error("ADMIN_TG_ID is not set in environment variables.")
-    if str(message.from_user.id) != ADMIN_ID:
+    if str(message.from_user.id) != os.getenv(ADMIN_TG_ID):
         await message.reply(
             "Здесь можно настраивать бот, но вы не администратор."
             "Воспользоваться ботом можно здесь:\n"
@@ -26,13 +21,12 @@ async def cmd_load_image(message: Message):
     text = (
         "Загрузите изображение\n\n"
     )
-    logger.info(f"Admin {ADMIN_ID} initiated image load.")
+    logging.warning(f"Admin {message.from_user.id} ({message.from_user.full_name}) initiated /load_image")
     await send_message(message, text)
-    # await message.reply("Пожалуйста, отправьте изображение, которое хотите загрузить.")
 
 @router.message(F.photo)
 async def handle_photo(message: Message):
-    if message.from_user.id != os.getenv(ADMIN_TG_ID):
+    if str(message.from_user.id) != os.getenv(ADMIN_TG_ID):
         return
     #присылаю это же фото в ответ
     await message.answer_photo(photo=message.photo[-1].file_id, caption="Вот ваше изображение!")
